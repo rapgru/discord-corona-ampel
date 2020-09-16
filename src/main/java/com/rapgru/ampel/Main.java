@@ -5,6 +5,7 @@ import com.rapgru.ampel.dao.DataFetchDAO;
 import com.rapgru.ampel.dao.DataFetchDAOImpl;
 import com.rapgru.ampel.mapper.DataFetchMapper;
 import com.rapgru.ampel.model.DistrictChange;
+import com.rapgru.ampel.object.DistrictDataDO;
 import com.rapgru.ampel.service.data.*;
 import com.rapgru.ampel.service.difference.DistrictDifferenceService;
 import com.rapgru.ampel.service.difference.DistrictDifferenceServiceImpl;
@@ -25,8 +26,6 @@ public class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        ConnectionManager.createTables();
-
         DataFetchMapper dataFetchMapper = new DataFetchMapper();
         CoronaDataService coronaDataService = new CoronaDataServiceImpl(dataFetchMapper);
         DataFetchDAO dataFetchDAO = new DataFetchDAOImpl(ConnectionManager.getDatabase());
@@ -48,8 +47,6 @@ public class Main {
 
         coronaDataFetchScheduler.start();
         LOGGER.info("Started data fetch scheduler");
-
-        LOGGER.info("All districts {}", coronaDataService.getAllAustrianDistricts());
     }
 
 

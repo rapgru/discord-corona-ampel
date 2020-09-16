@@ -39,4 +39,13 @@ public class DistrictData {
     public int hashCode() {
         return Objects.hash(warningColor, district);
     }
+
+    @Override
+    public String toString() {
+        return "DistrictData{" +
+                "warningColor=" + warningColor +
+                ", district=" + district +
+                ", reason='" + reason + '\'' +
+                '}';
+    }
 }

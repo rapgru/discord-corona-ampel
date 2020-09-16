@@ -1,13 +1,17 @@
 package com.rapgru.ampel.dao;
 
 import com.dieselpoint.norm.Database;
+import com.dieselpoint.norm.DbException;
 import com.rapgru.ampel.object.DataFetchDO;
+import com.rapgru.ampel.object.DistrictDataDO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
 public class ConnectionManager {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
     private static Database database = null;
 
     public static Database getDatabase() {
@@ -32,6 +36,7 @@ public class ConnectionManager {
 
     public static void createTables() {
         getDatabase().createTable(DataFetchDO.class);
+        getDatabase().createTable(DistrictDataDO.class);
     }
 
 }

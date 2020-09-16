@@ -9,22 +9,22 @@ import java.util.List;
 @Table(name="dataFetch")
 public class DataFetchDO {
 
-    @Id
-    @GeneratedValue
     private long id;
 
-    private Date date;
+    private String date;
 
     private List<DistrictDataDO> districtDataDOS;
 
     public DataFetchDO() {
     }
 
-    public DataFetchDO(Date date, List<DistrictDataDO> districtDataDOS) {
+    public DataFetchDO(String date, List<DistrictDataDO> districtDataDOS) {
         this.date = date;
         this.districtDataDOS = districtDataDOS;
     }
 
+    @Id
+    @GeneratedValue
     public long getId() {
         return id;
     }
@@ -33,11 +33,11 @@ public class DataFetchDO {
         this.id = id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

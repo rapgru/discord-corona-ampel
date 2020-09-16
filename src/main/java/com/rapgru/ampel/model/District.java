@@ -32,4 +32,12 @@ public class District {
     public int hashCode() {
         return Objects.hash(gkz);
     }
+
+    @Override
+    public String toString() {
+        return "District{" +
+                "gkz=" + gkz +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

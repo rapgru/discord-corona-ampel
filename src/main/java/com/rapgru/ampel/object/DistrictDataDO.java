@@ -5,16 +5,14 @@ import com.rapgru.ampel.model.WarningColor;
 
 import javax.persistence.*;
 
-@Table(name = "district")
+@Table(name="district")
 public class DistrictDataDO {
 
-    @Id
-    @GeneratedValue
+
     private long id;
 
     private int gkz;
 
-    @Enumerated(EnumType.ORDINAL)
     private WarningColor warningColor;
 
     private String name;
@@ -28,6 +26,7 @@ public class DistrictDataDO {
         this.gkz = gkz;
     }
 
+    @Enumerated(EnumType.ORDINAL)
     public WarningColor getWarningColor() {
         return warningColor;
     }
@@ -36,6 +35,8 @@ public class DistrictDataDO {
         this.warningColor = warningColor;
     }
 
+    @Id
+    @GeneratedValue
     public long getId() {
         return id;
     }

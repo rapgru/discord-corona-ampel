@@ -4,11 +4,11 @@ import com.rapgru.ampel.model.DataFetch;
 import com.rapgru.ampel.model.District;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Optional;
 
 public interface CoronaDataService {
 
-    CompletableFuture<DataFetch> getCurrentCoronaData();
+    Optional<DataFetch> getCurrentCoronaData();
 
     List<District> getAllAustrianDistricts();
 }

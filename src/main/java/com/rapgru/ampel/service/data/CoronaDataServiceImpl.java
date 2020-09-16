@@ -10,12 +10,15 @@ import com.rapgru.ampel.model.DistrictData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CoronaDataServiceImpl implements CoronaDataService {
@@ -32,19 +35,26 @@ public class CoronaDataServiceImpl implements CoronaDataService {
     }
 
     @Override
-    public CompletableFuture<DataFetch> getCurrentCoronaData() {
+    public Optional<DataFetch> getCurrentCoronaData() {
         HttpRequest req = getCoronaDataRequest();
         return performCoronaDataRequest(req);
     }
 
-    private CompletableFuture<DataFetch> performCoronaDataRequest(HttpRequest request) {
-        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(o -> {
-                    LOGGER.info("Request made: {} {} - Result {}", request.method(), request.uri(), o);
-                    return o;
-                })
-                .thenApply(this::mapToDTO)
-                .thenApply(dataFetchMapper::mapToCoronaFetch);
+    private Optional<DataFetch> performCoronaDataRequest(HttpRequest request) {
+        HttpResponse<String> response = null;
+        try {
+             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            LOGGER.error("IO Execption during HTTP Request for Corona Data",e);
+        } catch (InterruptedException e) {
+            LOGGER.error("Interrupted exception during HTTP Request for Corona Data",e);
+        }
+
+        LOGGER.info("Request made: {} {} - Result {}", request.method(), request.uri(), response);
+
+        return Optional.ofNullable(response)
+                .flatMap(this::mapToDTO)
+                .flatMap(dataFetchMapper::mapToCoronaFetch);
     }
     private HttpRequest getCoronaDataRequest() {
         return HttpRequest.newBuilder()
@@ -64,22 +74,25 @@ public class CoronaDataServiceImpl implements CoronaDataService {
 
     public List<District> fetchAllDistricts() {
         return getCurrentCoronaData()
-                .thenApply(dataFetch ->
+                .map(dataFetch ->
                     dataFetch.getDistrictDataList().stream()
                             .map(DistrictData::getDistrict)
                             .collect(Collectors.toList())
                 )
-                .join();
+                .orElse(Collections.emptyList());
     }
 
-    private CoronaDataDTO mapToDTO(HttpResponse<String> response) {
-        if (response.statusCode() != 200)
-            throw new RequestException("Status code is not 200 but " + response.statusCode());
+    private Optional<CoronaDataDTO> mapToDTO(HttpResponse<String> response) {
+        if (response.statusCode() != 200) {
+            LOGGER.error("Status code is not 200 but " + response.statusCode());
+            return Optional.empty();
+        }
 
         try {
-            return objectMapper.readValue(response.body(), CoronaDataDTO.class);
+            return Optional.of(objectMapper.readValue(response.body(), CoronaDataDTO.class));
         } catch (JsonProcessingException e) {
-            throw new RequestException("JSON Parsing error", e);
+            LOGGER.error("JSON Parsing error", e);
+            return Optional.empty();
         }
     }
 }

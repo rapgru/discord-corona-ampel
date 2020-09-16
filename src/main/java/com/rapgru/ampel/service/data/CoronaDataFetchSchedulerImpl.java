@@ -18,7 +18,7 @@ public class CoronaDataFetchSchedulerImpl implements CoronaDataFetchScheduler {
     }
 
     public void start() {
-        scheduledExecutorService.scheduleAtFixedRate(refreshDataTask, 0, 10, TimeUnit.MINUTES);
+        scheduledExecutorService.scheduleAtFixedRate(refreshDataTask, 0, 30, TimeUnit.SECONDS);
     }
 
     public void stop() {

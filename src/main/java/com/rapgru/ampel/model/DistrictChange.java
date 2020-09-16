@@ -31,4 +31,14 @@ public class DistrictChange {
     public DistrictData getDataPoint() {
         return dataPoint;
     }
+
+    @Override
+    public String toString() {
+        return "DistrictChange{" +
+                "from=" + from +
+                ", to=" + to +
+                ", direction=" + direction +
+                ", dataPoint=" + dataPoint +
+                '}';
+    }
 }
