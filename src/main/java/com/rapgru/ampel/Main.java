@@ -67,7 +67,7 @@ public class Main extends ListenerAdapter {
         }
     }
 
-    private static DiscordBot setupDiscordBotWithListeners(Object... listeners) {
+    private static DiscordBot setupDiscordBotWithListeners(Object... listeners) throws LoginException {
         String token = System.getenv("DISCORD_KEY");
         DiscordBot discordBot = new DiscordBot(token);
 
