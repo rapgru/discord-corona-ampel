@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 group 'com.rapgru.ampel'
@@ -25,5 +26,18 @@ jar {
     }
 }
 
-task stage(dependsOn: ['build', 'clean'])
-build.mustRunAfter clean
+task stage(dependsOn: ['shadowJar', 'clean'])
+shadowJar.mustRunAfter clean
+
+shadowJar {
+    mergeServiceFiles()
+    manifest {
+        attributes 'Implementation-Title': rootProject.name
+        attributes 'Implementation-Version': rootProject.version
+        attributes 'Implementation-Vendor-Id': rootProject.group
+        attributes 'Created-By': 'Gradle ' + gradle.gradleVersion
+        attributes 'Main-Class': mainClassName
+    }
+
+    with jar
+}
