@@ -1,1 +1,1 @@
-web: java -jar build/libs/corona-ampel-at-1.0-SNAPSHOT.jar
+worker: java -jar build/libs/corona-ampel-at-1.0-SNAPSHOT.jar
