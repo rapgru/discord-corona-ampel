@@ -10,6 +10,7 @@ import com.rapgru.ampel.model.DistrictData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -78,7 +79,7 @@ public class CoronaDataServiceImpl implements CoronaDataService {
 
         try {
             return objectMapper.readValue(response.body(), CoronaDataDTO.class);
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             throw new RequestException("JSON Parsing error", e);
         }
     }
