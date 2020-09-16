@@ -1,5 +1,7 @@
 package com.rapgru.ampel.model;
 
+import java.util.Objects;
+
 public class DistrictData {
 
     private final WarningColor warningColor;
@@ -22,5 +24,19 @@ public class DistrictData {
 
     public String getReason() {
         return reason;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DistrictData that = (DistrictData) o;
+        return warningColor == that.warningColor &&
+                district.equals(that.district);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(warningColor, district);
     }
 }

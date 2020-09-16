@@ -1,29 +1,56 @@
 package com.rapgru.ampel;
 
+import com.rapgru.ampel.dao.ConnectionManager;
+import com.rapgru.ampel.dao.DataFetchDAO;
+import com.rapgru.ampel.dao.DataFetchDAOImpl;
+import com.rapgru.ampel.mapper.DataFetchMapper;
+import com.rapgru.ampel.model.DistrictChange;
+import com.rapgru.ampel.service.data.*;
+import com.rapgru.ampel.service.difference.DistrictDifferenceService;
+import com.rapgru.ampel.service.difference.DistrictDifferenceServiceImpl;
+import com.rapgru.ampel.service.discord.NotificationService;
 import discord4j.core.DiscordClient;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.object.entity.channel.PrivateChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Main {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        final String token = System.getenv("DISCORD_KEY");
-        System.out.println(token);
-        final DiscordClient client = DiscordClient.create(token);
-        final GatewayDiscordClient gateway = client.login().block();
+        ConnectionManager.createTables();
 
-        Objects.requireNonNull(gateway).on(MessageCreateEvent.class).subscribe(event -> {
-            final Message message = event.getMessage();
-            if ("!ping".equals(message.getContent())) {
-                final MessageChannel channel = message.getChannel().block();
-                Objects.requireNonNull(channel).createMessage("Pong!").block();
+        DataFetchMapper dataFetchMapper = new DataFetchMapper();
+        CoronaDataService coronaDataService = new CoronaDataServiceImpl(dataFetchMapper);
+        DataFetchDAO dataFetchDAO = new DataFetchDAOImpl(ConnectionManager.getDatabase());
+        DistrictDifferenceService districtDifferenceService = new DistrictDifferenceServiceImpl();
+        NotificationService notificationService = new NotificationService() {
+            @Override
+            public void pushChanges(List<DistrictChange> changes) {
+                LOGGER.info("pushing changes {}", changes);
             }
-        });
+        };
+        RefreshDataTask refreshDataTask = new RefreshDataTask(
+                coronaDataService,
+                dataFetchDAO,
+                dataFetchMapper,
+                districtDifferenceService,
+                notificationService
+        );
+        CoronaDataFetchScheduler coronaDataFetchScheduler = new CoronaDataFetchSchedulerImpl(refreshDataTask);
 
-        gateway.onDisconnect().block();
+        coronaDataFetchScheduler.start();
+        LOGGER.info("Started data fetch scheduler");
+
+        LOGGER.info("All districts {}", coronaDataService.getAllAustrianDistricts());
     }
+
+
 }

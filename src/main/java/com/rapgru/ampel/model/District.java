@@ -1,5 +1,7 @@
 package com.rapgru.ampel.model;
 
+import java.util.Objects;
+
 public class District {
 
     private final int gkz;
@@ -16,5 +18,18 @@ public class District {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        District district = (District) o;
+        return gkz == district.gkz;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gkz);
     }
 }
