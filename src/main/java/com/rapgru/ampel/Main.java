@@ -2,9 +2,7 @@ package com.rapgru.ampel;
 
 import com.rapgru.ampel.dao.*;
 import com.rapgru.ampel.discord.DiscordBot;
-import com.rapgru.ampel.discord.commands.DirectMessageCommand;
-import com.rapgru.ampel.discord.commands.PingCommand;
-import com.rapgru.ampel.discord.commands.StopCommand;
+import com.rapgru.ampel.discord.commands.*;
 import com.rapgru.ampel.mapper.DataFetchMapper;
 import com.rapgru.ampel.service.data.*;
 import com.rapgru.ampel.service.difference.DistrictDifferenceService;
@@ -69,7 +67,9 @@ public class Main extends ListenerAdapter {
         discordBot.registerCommands(
                 new PingCommand(),
                 new StopCommand(),
-                new DirectMessageCommand()
+                new DirectMessageCommand(),
+                new SetupRolesCommand(coronaDataService),
+                new DeleteRolesCommand(coronaDataService)
         );
 
         return discordBot;
