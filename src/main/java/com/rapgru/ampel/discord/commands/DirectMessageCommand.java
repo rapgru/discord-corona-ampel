@@ -1,19 +1,13 @@
 package com.rapgru.ampel.discord.commands;
 
-import com.rapgru.ampel.discord.Command;
+import com.rapgru.ampel.discord.AdminCommand;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 
-public class DirectMessageCommand extends Command {
+public class DirectMessageCommand extends AdminCommand {
 
     public DirectMessageCommand() {
         setName("dm");
-        addRole("Admin");
-    }
-
-    @Override
-    public void roleNotFound(Message message) {
-        message.getChannel().sendMessage("this command is for admins.").queue();
     }
 
     @Override

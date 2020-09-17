@@ -6,19 +6,15 @@ import com.rapgru.ampel.discord.commands.DirectMessageCommand;
 import com.rapgru.ampel.discord.commands.PingCommand;
 import com.rapgru.ampel.discord.commands.StopCommand;
 import com.rapgru.ampel.mapper.DataFetchMapper;
-import com.rapgru.ampel.model.DistrictChange;
 import com.rapgru.ampel.service.data.*;
 import com.rapgru.ampel.service.difference.DistrictDifferenceService;
 import com.rapgru.ampel.service.difference.DistrictDifferenceServiceImpl;
 import com.rapgru.ampel.service.discord.NotificationService;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
-import javax.security.auth.login.LoginException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import javax.security.auth.login.LoginException;
 
 public class Main extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
@@ -47,9 +43,8 @@ public class Main extends ListenerAdapter {
         LOGGER.info("Started data fetch scheduler");
 
         LOGGER.info("start discord bot and block");
-        DiscordBot discordBot = setupDiscordBot();
+        DiscordBot discordBot = setupDiscordBot(coronaDataService);
         discordBot.connectBlocking();
-
 
         // graceful shutdown
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -67,7 +62,7 @@ public class Main extends ListenerAdapter {
         }
     }
 
-    private static DiscordBot setupDiscordBot() throws LoginException {
+    private static DiscordBot setupDiscordBot(CoronaDataService coronaDataService) throws LoginException {
         String token = System.getenv("DISCORD_KEY");
         DiscordBot discordBot = new DiscordBot(token);
 

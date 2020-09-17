@@ -1,21 +1,12 @@
 package com.rapgru.ampel.discord.commands;
 
-import com.rapgru.ampel.discord.Command;
+import com.rapgru.ampel.discord.AdminCommand;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-public class StopCommand extends Command {
+public class StopCommand extends AdminCommand {
 
     public StopCommand() {
         setName("stop");
-        addRole("Admin");
-    }
-
-    @Override
-    public void roleNotFound(Message message) {
-        message.getChannel().sendMessage("This command is only for admins.").queue();
     }
 
     @Override

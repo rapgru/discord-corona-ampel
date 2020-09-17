@@ -12,9 +12,11 @@ public abstract class Command {
 
     private List<String> roles = new ArrayList<>();
 
-    public abstract void roleNotFound(Message message);
-
     public abstract void execute(Message message, String[] args);
+
+    public void roleNotFound(Message message) {
+        message.getChannel().sendMessage("You dont have permissions for this command.").submit();
+    };
 
     public String getName() {
         return name;
