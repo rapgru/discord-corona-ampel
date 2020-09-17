@@ -1,8 +1,6 @@
 package com.rapgru.ampel;
 
-import com.rapgru.ampel.dao.ConnectionManager;
-import com.rapgru.ampel.dao.DataFetchDao;
-import com.rapgru.ampel.dao.DataFetchDaoImpl;
+import com.rapgru.ampel.dao.*;
 import com.rapgru.ampel.discord.DiscordBot;
 import com.rapgru.ampel.discord.commands.DirectMessageCommand;
 import com.rapgru.ampel.discord.commands.PingCommand;
@@ -32,6 +30,7 @@ public class Main extends ListenerAdapter {
 
         DataFetchMapper dataFetchMapper = new DataFetchMapper();
         DataFetchDao dataFetchDAO = new DataFetchDaoImpl(ConnectionManager.getDatabase(), dataFetchMapper);
+        SubscriptionDAO subscriptionDAO = new SubscriptionDAOImpl(ConnectionManager.getDatabase());
         CoronaDataService coronaDataService = new CoronaDataServiceImpl(dataFetchMapper);
         DistrictDifferenceService districtDifferenceService = new DistrictDifferenceServiceImpl();
         NotificationService notificationService = changes -> LOGGER.info("pushing changes {}", changes);
