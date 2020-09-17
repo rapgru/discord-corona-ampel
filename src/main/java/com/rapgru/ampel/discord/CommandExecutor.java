@@ -32,10 +32,10 @@ public class CommandExecutor extends ListenerAdapter {
         if (!rawMessage.startsWith(COMMAND_PREFIX)) {
             return;
         }
-
         if (member == null) {
             return;
         }
+
         Optional<Command> commandOptional = commands.stream()
                 .filter(command -> rawMessage.startsWith(command.getName(), 1))
                 .findFirst();

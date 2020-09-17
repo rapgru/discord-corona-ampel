@@ -19,15 +19,15 @@ public class DirectMessageCommand extends Command {
     @Override
     public void execute(Message message, String[] args) {
         Member member = message.getMember();
-
         if (member == null) {
             return;
         }
 
-        message.addReaction("✔").queue();
+        message.addReaction("☑️").queue();
 
         member.getUser().openPrivateChannel().queue(privateChannel -> {
             StringBuilder directMessageBuilder = new StringBuilder();
+            // offset of 1 to skip commandName
             for (int i = 1; i < args.length; i++) {
                 directMessageBuilder.append(args[i]);
                 directMessageBuilder.append(" ");
