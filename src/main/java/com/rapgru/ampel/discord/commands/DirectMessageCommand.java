@@ -17,7 +17,7 @@ public class DirectMessageCommand extends AdminCommand {
             return;
         }
 
-        message.addReaction(String.valueOf('\u008F')).queue();
+        message.addReaction("U+2611").queue();
 
         member.getUser().openPrivateChannel().queue(privateChannel -> {
             StringBuilder directMessageBuilder = new StringBuilder();
