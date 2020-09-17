@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class CommandExecutor extends ListenerAdapter {
 
@@ -35,23 +34,24 @@ public class CommandExecutor extends ListenerAdapter {
             return;
         }
 
-        Optional<Command> commandOptional = commands.stream()
-                // ignore case sensitive
+        commands.stream()
                 .filter(command -> rawMessage.toLowerCase().startsWith(command.getName().toLowerCase(), 1))
-                .findFirst();
+                .findFirst()
+                .ifPresent(command -> {
+                    // no permissions
+                    if (!command.getRoles().stream().allMatch(role -> hasRole(member, role))) {
+                        command.roleNotFound(event.getMessage());
+                        return;
+                    }
 
-        commandOptional.ifPresent(command -> {
-            if (!command.getRoles().stream().allMatch(role -> hasRole(member, role))) {
-                command.roleNotFound(event.getMessage());
-                return;
-            }
-
-            LOGGER.info("User " + member.getUser().getName() + " executed command " + command.getName());
-            commandOptional.get().execute(
-                    event.getMessage(),
-                    rawMessage.replaceFirst(COMMAND_PREFIX + command.getName(), "").split(" ")
-            );
-        });
+                    // execute command
+                    String[] args = rawMessage.split(" ");
+                    command.execute(
+                            event.getMessage(),
+                            Arrays.copyOfRange(args, 1, args.length)
+                    );
+                    LOGGER.info("User " + member.getUser().getName() + " executed command " + command.getName());
+                });
     }
 
     private boolean hasRole(Member member, String roleName) {
