@@ -11,4 +11,6 @@ public interface CoronaDataService {
     Optional<DataFetch> getCurrentCoronaData();
 
     List<District> getAllAustrianDistricts();
+
+    Optional<District> getDistrictByName(String districtName, boolean ignoreCase);
 }

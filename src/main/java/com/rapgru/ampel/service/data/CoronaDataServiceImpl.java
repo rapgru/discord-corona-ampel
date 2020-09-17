@@ -25,7 +25,7 @@ public class CoronaDataServiceImpl implements CoronaDataService {
     private static final String CORONA_DATA_URL = System.getenv("DATA_URL");
 
     private final HttpClient httpClient = HttpClient.newBuilder().build();
-    private List<District> allDistricts = null;
+    private List<District> allDistricts = Collections.emptyList();
     private final DataFetchMapper dataFetchMapper;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -64,11 +64,20 @@ public class CoronaDataServiceImpl implements CoronaDataService {
 
     @Override
     public List<District> getAllAustrianDistricts() {
-        if(allDistricts == null) {
+        if(allDistricts.isEmpty()) {
             allDistricts = fetchAllDistricts();
         }
 
         return allDistricts;
+    }
+
+    @Override
+    public Optional<District> getDistrictByName(String districtName, boolean ignoreCase) {
+        return getAllAustrianDistricts().stream()
+                .filter((District district) -> ignoreCase ?
+                        district.getName().equalsIgnoreCase(districtName) :
+                        district.getName().equals(districtName))
+                .findFirst();
     }
 
     public List<District> fetchAllDistricts() {
