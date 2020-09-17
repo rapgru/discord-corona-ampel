@@ -69,7 +69,8 @@ public class Main extends ListenerAdapter {
                 new StopCommand(),
                 new DirectMessageCommand(),
                 new SetupRolesCommand(coronaDataService),
-                new DeleteRolesCommand(coronaDataService)
+                new DeleteRolesCommand(coronaDataService),
+                new NoPermissionCommand()
         );
 
         return discordBot;
