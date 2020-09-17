@@ -93,6 +93,8 @@ public class CoronaDataServiceImpl implements CoronaDataService {
         } catch (JsonProcessingException e) {
             LOGGER.error("JSON Parsing error", e);
             return Optional.empty();
+        } catch (IOException e) {
+            return Optional.empty();
         }
     }
 }
