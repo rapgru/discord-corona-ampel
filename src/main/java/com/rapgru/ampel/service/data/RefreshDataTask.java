@@ -41,7 +41,7 @@ public class RefreshDataTask implements Runnable {
         }
     }
 
-    private void fetchData() throws SQLException {
+    private void fetchData() {
         Optional<DataFetch> optionalDataFetch = coronaDataService.getCurrentCoronaData();
         if(optionalDataFetch.isEmpty()) {
             LOGGER.warn("CoronaDataService did not supply data");
@@ -63,9 +63,8 @@ public class RefreshDataTask implements Runnable {
                 // Only store datafetch when something changed
                 if(!changes.isEmpty()) {
                     dataFetchDAO.storeDataFetch(dataFetch);
+                    notificationService.pushChanges(changes);
                 }
-
-                notificationService.pushChanges(changes);
             }
         }
     }

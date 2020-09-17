@@ -55,7 +55,7 @@ public class Main extends ListenerAdapter {
         discordBot.connectBlocking();
 
         // graceful shutdown
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> shutdown(discordBot)));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {shutdown(discordBot); coronaDataFetchScheduler.stop();}));
     }
 
     private static void validateProgramArguments(String[] arguments) {
