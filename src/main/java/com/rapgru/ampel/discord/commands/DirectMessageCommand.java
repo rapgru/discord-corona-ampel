@@ -23,7 +23,7 @@ public class DirectMessageCommand extends Command {
             return;
         }
 
-        message.addReaction("☑️").queue();
+        message.addReaction(String.valueOf('\u008F')).queue();
 
         member.getUser().openPrivateChannel().queue(privateChannel -> {
             StringBuilder directMessageBuilder = new StringBuilder();

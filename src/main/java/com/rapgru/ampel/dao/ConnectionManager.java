@@ -5,8 +5,10 @@ import com.dieselpoint.norm.sqlmakers.PostgresMaker;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.rapgru.ampel.model.Subscription;
 import com.rapgru.ampel.object.DataFetchDo;
 import com.rapgru.ampel.object.DistrictDataDo;
+import com.rapgru.ampel.object.SubscriptionDO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +43,7 @@ public class ConnectionManager {
     public static void createTables() {
         getDatabase().createTable(DataFetchDo.class);
         getDatabase().createTable(DistrictDataDo.class);
+        getDatabase().createTable(SubscriptionDO.class);
     }
 
 }
