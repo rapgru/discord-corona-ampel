@@ -1,6 +1,5 @@
 package com.rapgru.ampel.discord;
 
-import com.rapgru.ampel.Main;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import org.slf4j.Logger;
@@ -10,7 +9,7 @@ import javax.security.auth.login.LoginException;
 
 public class DiscordBot {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DiscordBot.class);
 
     private final JDA discordClient;
     private final CommandExecutor commandExecutor;

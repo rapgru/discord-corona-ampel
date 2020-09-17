@@ -1,6 +1,5 @@
 package com.rapgru.ampel.discord.commands;
 
-import com.rapgru.ampel.Main;
 import com.rapgru.ampel.dao.SubscriptionDAO;
 import com.rapgru.ampel.discord.Command;
 import com.rapgru.ampel.model.District;
@@ -12,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class UnsubscribeCommand extends Command {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UnsubscribeCommand.class);
 
     private final CoronaDataService coronaDataService;
     private final SubscriptionDAO subscriptionDAO;

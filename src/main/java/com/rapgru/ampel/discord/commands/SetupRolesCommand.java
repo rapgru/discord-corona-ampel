@@ -1,6 +1,5 @@
 package com.rapgru.ampel.discord.commands;
 
-import com.rapgru.ampel.Main;
 import com.rapgru.ampel.discord.AdminCommand;
 import com.rapgru.ampel.model.District;
 import com.rapgru.ampel.service.data.CoronaDataService;
@@ -14,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SetupRolesCommand extends AdminCommand {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SetupRolesCommand.class);
 
     private final CoronaDataService coronaDataService;
 

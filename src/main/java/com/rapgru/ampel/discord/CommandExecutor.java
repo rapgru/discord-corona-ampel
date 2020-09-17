@@ -1,6 +1,5 @@
 package com.rapgru.ampel.discord;
 
-import com.rapgru.ampel.Main;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -14,7 +13,7 @@ import java.util.List;
 
 public class CommandExecutor extends ListenerAdapter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandExecutor.class);
     private static final String COMMAND_PREFIX = "!";
 
     private final List<Command> commands = new ArrayList<>();
