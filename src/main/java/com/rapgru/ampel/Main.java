@@ -25,7 +25,7 @@ import java.util.List;
 public class Main extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
-    public static void main(String[] args) throws LoginException, InterruptedException{
+    public static void main(String[] args) throws LoginException, InterruptedException {
         validateProgramArguments(args); // check if args equals 0
 
         //ConnectionManager.createTables();
@@ -34,12 +34,7 @@ public class Main extends ListenerAdapter {
         DataFetchDao dataFetchDAO = new DataFetchDaoImpl(ConnectionManager.getDatabase(), dataFetchMapper);
         CoronaDataService coronaDataService = new CoronaDataServiceImpl(dataFetchMapper);
         DistrictDifferenceService districtDifferenceService = new DistrictDifferenceServiceImpl();
-        NotificationService notificationService = new NotificationService() {
-            @Override
-            public void pushChanges(List<DistrictChange> changes) {
-                LOGGER.info("pushing changes {}", changes);
-            }
-        };
+        NotificationService notificationService = changes -> LOGGER.info("pushing changes {}", changes);
         RefreshDataTask refreshDataTask = new RefreshDataTask(
                 coronaDataService,
                 dataFetchDAO,
