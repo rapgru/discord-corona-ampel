@@ -8,11 +8,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.security.auth.login.LoginException;
 import com.rapgru.ampel.dao.ConnectionManager;
-import com.rapgru.ampel.dao.DataFetchDAO;
-import com.rapgru.ampel.dao.DataFetchDAOImpl;
+import com.rapgru.ampel.dao.DataFetchDao;
+import com.rapgru.ampel.dao.DataFetchDaoImpl;
 import com.rapgru.ampel.mapper.DataFetchMapper;
 import com.rapgru.ampel.model.DistrictChange;
-import com.rapgru.ampel.object.DataFetchDO;
+import com.rapgru.ampel.object.DataFetchDo;
 import com.rapgru.ampel.service.data.*;
 import com.rapgru.ampel.service.difference.DistrictDifferenceService;
 import com.rapgru.ampel.service.difference.DistrictDifferenceServiceImpl;
@@ -20,8 +20,6 @@ import com.rapgru.ampel.service.discord.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
-import javax.security.auth.login.LoginException;
 import java.util.List;
 
 public class Main extends ListenerAdapter {
@@ -32,8 +30,8 @@ public class Main extends ListenerAdapter {
         try {
             //ConnectionManager.createTables();
 
-            Dao<DataFetchDO, Long> dataFetchDBDAO = DaoManager.createDao(ConnectionManager.getDatabase(), DataFetchDO.class);
-            DataFetchDAO dataFetchDAO = new DataFetchDAOImpl(dataFetchDBDAO);
+            Dao<DataFetchDo, Long> dataFetchDBDAO = DaoManager.createDao(ConnectionManager.getDatabase(), DataFetchDo.class);
+            DataFetchDao dataFetchDAO = new DataFetchDaoImpl(dataFetchDBDAO);
             DataFetchMapper dataFetchMapper = new DataFetchMapper(dataFetchDAO);
             CoronaDataService coronaDataService = new CoronaDataServiceImpl(dataFetchMapper);
             DistrictDifferenceService districtDifferenceService = new DistrictDifferenceServiceImpl();

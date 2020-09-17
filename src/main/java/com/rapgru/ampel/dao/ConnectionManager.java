@@ -1,11 +1,10 @@
 package com.rapgru.ampel.dao;
 
-import com.dieselpoint.norm.Database;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.rapgru.ampel.object.DataFetchDO;
-import com.rapgru.ampel.object.DistrictDataDO;
+import com.rapgru.ampel.object.DataFetchDo;
+import com.rapgru.ampel.object.DistrictDataDo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,8 +31,8 @@ public class ConnectionManager {
     }
 
     public static void createTables() throws SQLException {
-        TableUtils.createTableIfNotExists(getDatabase(), DataFetchDO.class);
-        TableUtils.createTableIfNotExists(getDatabase(), DistrictDataDO.class);
+        TableUtils.createTableIfNotExists(getDatabase(), DataFetchDo.class);
+        TableUtils.createTableIfNotExists(getDatabase(), DistrictDataDo.class);
     }
 
 }

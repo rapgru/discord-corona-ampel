@@ -1,6 +1,6 @@
 package com.rapgru.ampel.mapper;
 
-import com.rapgru.ampel.dao.DataFetchDAO;
+import com.rapgru.ampel.dao.DataFetchDao;
 import com.rapgru.ampel.dto.CoronaDataDTO;
 import com.rapgru.ampel.dto.DistrictDTO;
 import com.rapgru.ampel.dto.WeekDTO;
@@ -8,8 +8,8 @@ import com.rapgru.ampel.model.DataFetch;
 import com.rapgru.ampel.model.District;
 import com.rapgru.ampel.model.DistrictData;
 import com.rapgru.ampel.model.WarningColor;
-import com.rapgru.ampel.object.DataFetchDO;
-import com.rapgru.ampel.object.DistrictDataDO;
+import com.rapgru.ampel.object.DataFetchDo;
+import com.rapgru.ampel.object.DistrictDataDo;
 import org.jooq.lambda.tuple.Tuple;
 
 import java.sql.SQLException;
@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 
 public class DataFetchMapper {
 
-    private final DataFetchDAO dataFetchDAO;
+    private final DataFetchDao dataFetchDAO;
 
-    public DataFetchMapper(DataFetchDAO dataFetchDAO) {
+    public DataFetchMapper(DataFetchDao dataFetchDAO) {
         this.dataFetchDAO = dataFetchDAO;
     }
 
@@ -91,12 +91,12 @@ public class DataFetchMapper {
         }
     }
 
-    public DataFetchDO toDO(DataFetch dataFetch) throws SQLException {
-        DataFetchDO dataFetchDO = new DataFetchDO(
+    public DataFetchDo toDO(DataFetch dataFetch) throws SQLException {
+        DataFetchDo dataFetchDO = new DataFetchDo(
                 dataFetch.getDate().toString()
         );
         dataFetchDAO.init(dataFetchDO);
-        dataFetchDO.setDistrictDataDOS(
+        dataFetchDO.setDistrictDataDos(
                 dataFetch.getDistrictDataList()
                         .stream()
                         .map(this::toDistrictDataDO)
@@ -105,8 +105,8 @@ public class DataFetchMapper {
         return dataFetchDO;
     }
 
-    private DistrictDataDO toDistrictDataDO(DistrictData districtData) {
-        return new DistrictDataDO(
+    private DistrictDataDo toDistrictDataDO(DistrictData districtData) {
+        return new DistrictDataDo(
                 districtData.getDistrict().getGkz(),
                 districtData.getWarningColor(),
                 districtData.getDistrict().getName(),
@@ -114,17 +114,17 @@ public class DataFetchMapper {
         );
     }
 
-    public DataFetch toDataFetch(DataFetchDO dataFetchDO) {
+    public DataFetch toDataFetch(DataFetchDo dataFetchDO) {
         return new DataFetch(
                 Instant.parse(dataFetchDO.getDate()),
-                dataFetchDO.getDistrictDataDOS()
+                dataFetchDO.getDistrictDataDos()
                         .stream()
                         .map(this::toDistrictData)
                         .collect(Collectors.toList())
         );
     }
 
-    private DistrictData toDistrictData(DistrictDataDO districtDataDO) {
+    private DistrictData toDistrictData(DistrictDataDo districtDataDO) {
         return new DistrictData(
                 districtDataDO.getWarningColor(),
                 new District(

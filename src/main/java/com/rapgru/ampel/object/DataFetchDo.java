@@ -5,15 +5,11 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @DatabaseTable(tableName = "dataFetches")
-public class DataFetchDO {
+public class DataFetchDo {
 
     @DatabaseField(generatedId = true)
     private long id;
@@ -22,12 +18,12 @@ public class DataFetchDO {
     private String date;
 
     @ForeignCollectionField(eager = true)
-    private ForeignCollection<DistrictDataDO> districtDataDOS;
+    private ForeignCollection<DistrictDataDo> districtDataDos;
 
-    public DataFetchDO() {
+    public DataFetchDo() {
     }
 
-    public DataFetchDO(String date) {
+    public DataFetchDo(String date) {
         this.date = date;
     }
 
@@ -47,12 +43,12 @@ public class DataFetchDO {
         this.date = date;
     }
 
-    public List<DistrictDataDO> getDistrictDataDOS() {
-        return new ArrayList<>(districtDataDOS);
+    public List<DistrictDataDo> getDistrictDataDos() {
+        return new ArrayList<>(districtDataDos);
     }
 
-    public void setDistrictDataDOS(List<DistrictDataDO> districtDataDOS) {
-        this.districtDataDOS.clear();
-        this.districtDataDOS.addAll(districtDataDOS);
+    public void setDistrictDataDos(List<DistrictDataDo> districtDataDos) {
+        this.districtDataDos.clear();
+        this.districtDataDos.addAll(districtDataDos);
     }
 }
