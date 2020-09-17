@@ -15,6 +15,14 @@ public class SubscriptionDO {
 
     private int gkz;
 
+    public SubscriptionDO() {}
+
+    public SubscriptionDO(String date, String username, int gkz) {
+        this.date = date;
+        this.username = username;
+        this.gkz = gkz;
+    }
+
     @Id
     @GeneratedValue
     public long getId() {
@@ -31,12 +39,6 @@ public class SubscriptionDO {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public SubscriptionDO(String date, String username, int gkz) {
-        this.date = date;
-        this.username = username;
-        this.gkz = gkz;
     }
 
     public String getUsername() {

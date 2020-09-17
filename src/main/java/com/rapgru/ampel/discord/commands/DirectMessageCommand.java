@@ -17,7 +17,7 @@ public class DirectMessageCommand extends AdminCommand {
             return;
         }
 
-        message.addReaction("U+2611").queue();
+        message.addReaction("U+2611").queue(); // unicode for check box icon
 
         member.getUser().openPrivateChannel().queue(privateChannel -> {
             StringBuilder directMessageBuilder = new StringBuilder();

@@ -41,7 +41,18 @@ public class Main extends ListenerAdapter {
         LOGGER.info("Started data fetch scheduler");
 
         LOGGER.info("start discord bot and block");
-        DiscordBot discordBot = setupDiscordBot(coronaDataService);
+        DiscordBot discordBot = new DiscordBot(System.getenv("DISCORD_KEY"));
+        discordBot.registerCommands(
+                new PingCommand(),
+                new StopCommand(),
+                new DirectMessageCommand(),
+                new SetupRolesCommand(coronaDataService),
+                new DeleteRolesCommand(coronaDataService),
+                new NoPermissionCommand(),
+                new CheckSubscriptionCommand(subscriptionDAO),
+                new SubscribeCommand(subscriptionDAO, coronaDataService),
+                new UnsubscribeCommand(coronaDataService, subscriptionDAO)
+        );
         discordBot.connectBlocking();
 
         // graceful shutdown
@@ -58,21 +69,5 @@ public class Main extends ListenerAdapter {
         if (arguments.length != 0) {
             throw new IllegalArgumentException("no arguments allowed for this application");
         }
-    }
-
-    private static DiscordBot setupDiscordBot(CoronaDataService coronaDataService) throws LoginException {
-        String token = System.getenv("DISCORD_KEY");
-        DiscordBot discordBot = new DiscordBot(token);
-
-        discordBot.registerCommands(
-                new PingCommand(),
-                new StopCommand(),
-                new DirectMessageCommand(),
-                new SetupRolesCommand(coronaDataService),
-                new DeleteRolesCommand(coronaDataService),
-                new NoPermissionCommand()
-        );
-
-        return discordBot;
     }
 }

@@ -51,8 +51,8 @@ public class SetupRolesCommand extends AdminCommand {
                         LOGGER.info("created district role {} out of {}", counter.get(), districtCount);
 
                         if (counter.get() == districtCount) {
+                            message.getChannel().sendMessage("district setup done!").submit();
                             LOGGER.info("district setup done");
-                            message.getChannel().sendMessage("district setup done!");
                         }
                     });
 
