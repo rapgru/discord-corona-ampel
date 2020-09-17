@@ -3,7 +3,6 @@ package com.rapgru.ampel.discord;
 import com.rapgru.ampel.Main;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
@@ -37,7 +36,8 @@ public class CommandExecutor extends ListenerAdapter {
         }
 
         Optional<Command> commandOptional = commands.stream()
-                .filter(command -> rawMessage.startsWith(command.getName(), 1))
+                // ignore case sensitive
+                .filter(command -> rawMessage.toLowerCase().startsWith(command.getName().toLowerCase(), 1))
                 .findFirst();
 
         commandOptional.ifPresent(command -> {
