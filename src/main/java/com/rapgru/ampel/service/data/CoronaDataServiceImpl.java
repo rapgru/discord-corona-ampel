@@ -51,6 +51,7 @@ public class CoronaDataServiceImpl implements CoronaDataService {
         }
 
         LOGGER.info("Request made: {} {} - Result {}", request.method(), request.uri(), response);
+        System.out.println(String.format("Request made: %s %s - Result %s", request.method(), request.uri(), response));
 
         return Optional.ofNullable(response)
                 .flatMap(this::mapToDTO)
