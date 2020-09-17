@@ -9,10 +9,13 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
-    implementation 'com.discord4j:discord4j-core:3.1.1'
+    compile ('net.dv8tion:JDA:4.2.0_204') {
+        exclude module: 'opus-java'
+    }
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'org.postgresql:postgresql:42.2.1'
