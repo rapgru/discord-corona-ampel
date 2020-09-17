@@ -17,6 +17,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +49,7 @@ public class RefreshDataTask implements Runnable {
         }
     }
 
-    private void fetchData() {
+    private void fetchData() throws SQLException {
         Optional<DataFetch> optionalDataFetch = coronaDataService.getCurrentCoronaData();
         if(optionalDataFetch.isEmpty()) {
             LOGGER.warn("CoronaDataService did not supply data");

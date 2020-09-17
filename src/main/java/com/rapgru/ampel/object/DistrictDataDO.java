@@ -1,22 +1,32 @@
 package com.rapgru.ampel.object;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import com.rapgru.ampel.model.District;
 import com.rapgru.ampel.model.WarningColor;
 
 import javax.persistence.*;
 
-@Table(name="district")
+@DatabaseTable(tableName="districts")
 public class DistrictDataDO {
 
-
+    @DatabaseField(generatedId = true)
     private long id;
 
+    @DatabaseField
     private int gkz;
 
+    @DatabaseField
     private WarningColor warningColor;
 
+    @DatabaseField
     private String name;
+
+    @DatabaseField
     private String reason;
+
+    @DatabaseField(canBeNull = false, foreign = true)
+    private DataFetchDO dataFetch;
 
     public int getGkz() {
         return gkz;
@@ -26,7 +36,6 @@ public class DistrictDataDO {
         this.gkz = gkz;
     }
 
-    @Enumerated(EnumType.ORDINAL)
     public WarningColor getWarningColor() {
         return warningColor;
     }
@@ -35,8 +44,6 @@ public class DistrictDataDO {
         this.warningColor = warningColor;
     }
 
-    @Id
-    @GeneratedValue
     public long getId() {
         return id;
     }

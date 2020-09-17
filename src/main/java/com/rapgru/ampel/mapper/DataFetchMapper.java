@@ -1,8 +1,8 @@
 package com.rapgru.ampel.mapper;
 
+import com.rapgru.ampel.dao.DataFetchDAO;
 import com.rapgru.ampel.dto.CoronaDataDTO;
 import com.rapgru.ampel.dto.DistrictDTO;
-import com.rapgru.ampel.dto.DistrictDataDTO;
 import com.rapgru.ampel.dto.WeekDTO;
 import com.rapgru.ampel.model.DataFetch;
 import com.rapgru.ampel.model.District;
@@ -12,15 +12,20 @@ import com.rapgru.ampel.object.DataFetchDO;
 import com.rapgru.ampel.object.DistrictDataDO;
 import org.jooq.lambda.tuple.Tuple;
 
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class DataFetchMapper {
+
+    private final DataFetchDAO dataFetchDAO;
+
+    public DataFetchMapper(DataFetchDAO dataFetchDAO) {
+        this.dataFetchDAO = dataFetchDAO;
+    }
 
     public Optional<DataFetch> mapToCoronaFetch(CoronaDataDTO coronaDataDTO) {
         if(!coronaDataDTO.getVersion().equals("2.0.0"))
@@ -32,7 +37,8 @@ public class DataFetchMapper {
         if(latestWeekDTO.isEmpty())
             return Optional.empty();
 
-        return Optional.of(new DataFetch(
+        return Optional.of(
+                new DataFetch(
                     Instant.now(),
                     mapToDistrictDataList(
                             latestWeekDTO.get(),
@@ -85,14 +91,18 @@ public class DataFetchMapper {
         }
     }
 
-    public DataFetchDO toDO(DataFetch dataFetch) {
-        return new DataFetchDO(
-                dataFetch.getDate().toString(),
+    public DataFetchDO toDO(DataFetch dataFetch) throws SQLException {
+        DataFetchDO dataFetchDO = new DataFetchDO(
+                dataFetch.getDate().toString()
+        );
+        dataFetchDAO.init(dataFetchDO);
+        dataFetchDO.setDistrictDataDOS(
                 dataFetch.getDistrictDataList()
                         .stream()
                         .map(this::toDistrictDataDO)
                         .collect(Collectors.toList())
         );
+        return dataFetchDO;
     }
 
     private DistrictDataDO toDistrictDataDO(DistrictData districtData) {
