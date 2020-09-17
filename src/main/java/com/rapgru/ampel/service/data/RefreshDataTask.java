@@ -47,11 +47,11 @@ public class RefreshDataTask implements Runnable {
             LOGGER.warn("CoronaDataService did not supply data");
         } else {
             DataFetch dataFetch = optionalDataFetch.get();
-            dataFetchDAO.storeDataFetch(dataFetchMapper.toDO(dataFetch));
 
-            Optional<DataFetch> optionalPrevDataFetch = dataFetchDAO.getLastDataFetch().map(dataFetchMapper::toDataFetch);
+            Optional<DataFetch> optionalPrevDataFetch = dataFetchDAO.getLastDataFetch();
             if(optionalPrevDataFetch.isEmpty()) {
                 LOGGER.warn("Unpopulated database - will be successful on next execution");
+                dataFetchDAO.storeDataFetch(dataFetch);
             } else {
                 DataFetch prevDataFetch = optionalPrevDataFetch.get();
 
@@ -59,6 +59,11 @@ public class RefreshDataTask implements Runnable {
                         districtDifferenceService.changes(prevDataFetch.getDistrictDataList(), dataFetch.getDistrictDataList());
 
                 LOGGER.info("calculated differences: {}", changes);
+
+                // Only store datafetch when something changed
+                if(!changes.isEmpty()) {
+                    dataFetchDAO.storeDataFetch(dataFetch);
+                }
 
                 notificationService.pushChanges(changes);
             }

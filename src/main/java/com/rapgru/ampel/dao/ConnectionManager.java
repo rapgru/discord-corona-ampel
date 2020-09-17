@@ -1,5 +1,7 @@
 package com.rapgru.ampel.dao;
 
+import com.dieselpoint.norm.Database;
+import com.dieselpoint.norm.sqlmakers.PostgresMaker;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -13,10 +15,11 @@ import java.sql.SQLException;
 
 public class ConnectionManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
-    private static ConnectionSource database = null;
+    private static Database database = null;
 
-    public static ConnectionSource getDatabase() throws SQLException {
+    public static Database getDatabase() {
         if(database == null) {
+            Database db = new Database();
 
             URI dbUri = URI.create(System.getenv("DATABASE_URL"));
 
@@ -24,15 +27,20 @@ public class ConnectionManager {
             String password = dbUri.getUserInfo().split(":")[1];
             String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
 
-            database = new JdbcConnectionSource(dbUrl, username, password);
+            db.setJdbcUrl(dbUrl);
+            db.setPassword(password);
+            db.setUser(username);
+            db.setSqlMaker(new PostgresMaker());
+
+            database = db;
         }
 
         return database;
     }
 
-    public static void createTables() throws SQLException {
-        TableUtils.createTableIfNotExists(getDatabase(), DataFetchDo.class);
-        TableUtils.createTableIfNotExists(getDatabase(), DistrictDataDo.class);
+    public static void createTables() {
+        getDatabase().createTable(DataFetchDo.class);
+        getDatabase().createTable(DistrictDataDo.class);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.rapgru.ampel.dao;
 
+import com.rapgru.ampel.model.DataFetch;
 import com.rapgru.ampel.object.DataFetchDo;
 
 import java.sql.SQLException;
@@ -7,9 +8,8 @@ import java.util.Optional;
 
 public interface DataFetchDao {
 
-    void storeDataFetch(DataFetchDo dataFetch) throws SQLException;
+    void storeDataFetch(DataFetch dataFetch);
 
-    Optional<DataFetchDo> getLastDataFetch() throws SQLException;
+    Optional<DataFetch> getLastDataFetch();
 
-    void init(DataFetchDo dataFetchDO) throws SQLException;
 }

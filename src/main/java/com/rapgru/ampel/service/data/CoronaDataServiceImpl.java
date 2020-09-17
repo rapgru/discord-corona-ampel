@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 public class CoronaDataServiceImpl implements CoronaDataService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoronaDataServiceImpl.class);
-    private static final String CORONA_DATA_URL = "https://corona-ampel.gv.at/sites/corona-ampel.gv.at/files/coronadata/CoronaKommissionV2.json";
+    private static final String CORONA_DATA_URL = System.getenv("DATA_URL");
 
     private final HttpClient httpClient = HttpClient.newBuilder().build();
     private List<District> allDistricts = null;
