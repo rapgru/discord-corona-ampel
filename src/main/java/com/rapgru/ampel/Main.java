@@ -1,19 +1,22 @@
 package com.rapgru.ampel;
 
-import com.rapgru.ampel.discord.DiscordBot;
-import com.rapgru.ampel.discord.events.MessageReceivedListener;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
-import javax.security.auth.login.LoginException;
 import com.rapgru.ampel.dao.ConnectionManager;
 import com.rapgru.ampel.dao.DataFetchDao;
 import com.rapgru.ampel.dao.DataFetchDaoImpl;
+import com.rapgru.ampel.discord.DiscordBot;
+import com.rapgru.ampel.discord.commands.DirectMessageCommand;
+import com.rapgru.ampel.discord.commands.PingCommand;
+import com.rapgru.ampel.discord.commands.StopCommand;
 import com.rapgru.ampel.mapper.DataFetchMapper;
 import com.rapgru.ampel.model.DistrictChange;
 import com.rapgru.ampel.service.data.*;
 import com.rapgru.ampel.service.difference.DistrictDifferenceService;
 import com.rapgru.ampel.service.difference.DistrictDifferenceServiceImpl;
 import com.rapgru.ampel.service.discord.NotificationService;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
+import javax.security.auth.login.LoginException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,13 +52,19 @@ public class Main extends ListenerAdapter {
         coronaDataFetchScheduler.start();
         LOGGER.info("Started data fetch scheduler");
 
-        DiscordBot discordBot = setupDiscordBotWithListeners(
-                new MessageReceivedListener()
-        );
+        LOGGER.info("start discord bot and block");
+        DiscordBot discordBot = setupDiscordBot();
         discordBot.connectBlocking();
 
+
         // graceful shutdown
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {shutdown(discordBot); coronaDataFetchScheduler.stop();}));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            LOGGER.info("shutting down discord bot");
+            discordBot.shutdown();
+
+            LOGGER.info("stopping coronaDataFetchScheduler");
+            coronaDataFetchScheduler.stop();
+        }));
     }
 
     private static void validateProgramArguments(String[] arguments) {
@@ -64,19 +73,16 @@ public class Main extends ListenerAdapter {
         }
     }
 
-    private static DiscordBot setupDiscordBotWithListeners(Object... listeners) throws LoginException {
+    private static DiscordBot setupDiscordBot() throws LoginException {
         String token = System.getenv("DISCORD_KEY");
         DiscordBot discordBot = new DiscordBot(token);
 
-        discordBot.registerEventListeners(listeners);
+        discordBot.registerCommands(
+                new PingCommand(),
+                new StopCommand(),
+                new DirectMessageCommand()
+        );
 
         return discordBot;
     }
-
-    private static void shutdown(DiscordBot discordBot) {
-        System.out.println("shutting down"); //TODO: logging
-        discordBot.disconnect();
-    }
-
-
 }
