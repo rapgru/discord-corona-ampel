@@ -42,8 +42,10 @@ public class UnsubscribeCommand extends Command {
             return;
         }
         String userId = message.getMember().getUser().getId();
-        subscriptionDAO.getSubscriptionWithUsername(userId).forEach(subscriptionDAO::deleteSubscription);
+        subscriptionDAO.getSubscriptionWithUsername(userId).stream()
+                .filter(subscription -> subscription.getGkz() == district.getGkz())
+                .forEach(subscriptionDAO::deleteSubscription);
 
-        channel.sendMessage("Unsubscribed.").submit();
+        channel.sendMessage("Unsubscribed von Gemeinde " + districtName).submit();
     }
 }
