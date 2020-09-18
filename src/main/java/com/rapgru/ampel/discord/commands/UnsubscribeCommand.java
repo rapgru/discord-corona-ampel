@@ -3,11 +3,14 @@ package com.rapgru.ampel.discord.commands;
 import com.rapgru.ampel.dao.SubscriptionDAO;
 import com.rapgru.ampel.discord.Command;
 import com.rapgru.ampel.model.District;
+import com.rapgru.ampel.model.Subscription;
 import com.rapgru.ampel.service.data.CoronaDataService;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class UnsubscribeCommand extends Command {
 
@@ -46,10 +49,18 @@ public class UnsubscribeCommand extends Command {
             return;
         }
         String userId = message.getMember().getUser().getId();
-        subscriptionDAO.getSubscriptionWithUsername(userId).stream()
-                .filter(subscription -> subscription.getGkz() == district.getGkz())
-                .forEach(subscriptionDAO::deleteSubscription);
+        List<Subscription> subscriptions = subscriptionDAO.getSubscriptionWithUsername(userId);
 
-        channel.sendMessage("Unsubscribed von Gemeinde " + districtName).submit();
+        if (subscriptions.isEmpty()) {
+            sendMessage(channel, "Du bist nicht bei der Gemeinde " + districtName + " subscribed");
+            return;
+        }
+        subscriptions.stream()
+                .filter(subscription -> subscription.getGkz() == district.getGkz())
+                .forEach(subscription -> {
+                    subscriptionDAO.deleteSubscription(subscription);
+                    sendMessage(channel, "Unsubscribed von Gemeinde " + districtName);
+                    LOGGER.info("userId {} unsubscribed from district {}", userId, districtName);
+                });
     }
 }
