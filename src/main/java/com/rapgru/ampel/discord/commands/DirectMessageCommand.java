@@ -6,8 +6,11 @@ import net.dv8tion.jda.api.entities.Message;
 
 public class DirectMessageCommand extends AdminCommand {
 
-    public DirectMessageCommand() {
-        setName("dm");
+    public DirectMessageCommand() {}
+
+    @Override
+    public String getName() {
+        return "dm";
     }
 
     @Override

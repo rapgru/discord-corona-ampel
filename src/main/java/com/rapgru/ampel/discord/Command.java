@@ -10,7 +10,6 @@ import java.util.List;
 public abstract class Command {
 
     private final List<String> roles = new ArrayList<>();
-    private String name;
 
     public abstract void execute(Message message, String[] args);
 
@@ -18,13 +17,7 @@ public abstract class Command {
         message.getChannel().sendMessage("You dont have permissions for this command.").submit();
     };
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    public abstract String getName();
 
     public List<String> getRoles() {
         return roles;

@@ -14,8 +14,12 @@ public class CheckSubscriptionCommand extends Command {
     private final SubscriptionDAO subscriptionDAO;
 
     public CheckSubscriptionCommand(SubscriptionDAO subscriptionDAO) {
-        setName("checkSubscription");
         this.subscriptionDAO = subscriptionDAO;
+    }
+
+    @Override
+    public String getName() {
+        return "checkSubscription";
     }
 
     @Override

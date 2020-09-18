@@ -21,9 +21,13 @@ public class SubscribeCommand extends Command {
     private final CoronaDataService coronaDataService;
 
     public SubscribeCommand(SubscriptionDAO subscriptionDAO, CoronaDataService coronaDataService) {
-        setName("subscribe");
         this.subscriptionDAO = subscriptionDAO;
         this.coronaDataService = coronaDataService;
+    }
+
+    @Override
+    public String getName() {
+        return "subscribe";
     }
 
     @Override

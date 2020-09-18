@@ -5,12 +5,12 @@ import net.dv8tion.jda.api.entities.Message;
 
 public class PingCommand extends Command {
 
-    public PingCommand() {
-        setName("ping");
-    }
+    public PingCommand() {}
 
     @Override
-    public void roleNotFound(Message message) {}
+    public String getName() {
+        return "ping";
+    }
 
     @Override
     public void execute(Message message, String[] args) {

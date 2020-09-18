@@ -6,8 +6,12 @@ import net.dv8tion.jda.api.entities.Message;
 public class NoPermissionCommand extends Command {
 
     public NoPermissionCommand() {
-        setName("noPermission");
         addRole("aNonExistentRole");
+    }
+
+    @Override
+    public String getName() {
+        return "noPermissions";
     }
 
     @Override

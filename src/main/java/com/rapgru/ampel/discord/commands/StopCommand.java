@@ -5,8 +5,11 @@ import net.dv8tion.jda.api.entities.Message;
 
 public class StopCommand extends AdminCommand {
 
-    public StopCommand() {
-        setName("stop");
+    public StopCommand() {}
+
+    @Override
+    public String getName() {
+        return "stop";
     }
 
     @Override

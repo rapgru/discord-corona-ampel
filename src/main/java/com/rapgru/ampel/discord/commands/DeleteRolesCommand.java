@@ -14,8 +14,12 @@ public class DeleteRolesCommand extends AdminCommand {
     private final CoronaDataService coronaDataService;
 
     public DeleteRolesCommand(CoronaDataService coronaDataService) {
-        setName("deleteroles");
         this.coronaDataService = coronaDataService;
+    }
+
+    @Override
+    public String getName() {
+        return "deleteRoles";
     }
 
     @Override

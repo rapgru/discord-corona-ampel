@@ -18,8 +18,12 @@ public class SetupRolesCommand extends AdminCommand {
     private final CoronaDataService coronaDataService;
 
     public SetupRolesCommand(CoronaDataService coronaDataService) {
-        setName("setupRoles");
         this.coronaDataService = coronaDataService;
+    }
+
+    @Override
+    public String getName() {
+        return "setupRoles";
     }
 
     @Override

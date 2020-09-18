@@ -17,9 +17,13 @@ public class UnsubscribeCommand extends Command {
     private final SubscriptionDAO subscriptionDAO;
 
     public UnsubscribeCommand(CoronaDataService coronaDataService, SubscriptionDAO subscriptionDAO) {
-        setName("unsubscribe");
         this.coronaDataService = coronaDataService;
         this.subscriptionDAO = subscriptionDAO;
+    }
+
+    @Override
+    public String getName() {
+        return "unsubscribe";
     }
 
     @Override
