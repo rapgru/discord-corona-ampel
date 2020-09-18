@@ -3,6 +3,8 @@ package com.rapgru.ampel.service.discord;
 import com.rapgru.ampel.dao.SubscriptionDAO;
 import com.rapgru.ampel.discord.DiscordBot;
 import com.rapgru.ampel.model.DistrictChange;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,24 +14,20 @@ public class NotificationServiceListener implements NotificationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationServiceListener.class);
 
-    private SubscriptionDAO subscriptionDAO;
-    private DiscordBot discordBot;
+    private final SubscriptionDAO subscriptionDAO;
+    private final DiscordBot discordBot;
+    private final ChangeMessageService changeMessageService;
 
-    public NotificationServiceListener(SubscriptionDAO subscriptionDAO, DiscordBot discordBot) {
+    public NotificationServiceListener(SubscriptionDAO subscriptionDAO, DiscordBot discordBot, ChangeMessageService changeMessageService) {
         this.subscriptionDAO = subscriptionDAO;
         this.discordBot = discordBot;
+        this.changeMessageService = changeMessageService;
     }
 
     @Override
     public void pushChanges(List<DistrictChange> changes) {
         changes.forEach(districtChange -> {
-            String notification = String.format(
-                    "Die Warnstufe f\u00fcr die Gemeinde %s wurde ge\u00e4ndert von %s auf %s. \nGrund: %s",
-                    districtChange.getDataPoint().getDistrict().getName(),
-                    districtChange.getFrom().name(),
-                    districtChange.getTo().name(),
-                    districtChange.getDataPoint().getReason()
-            );
+            MessageEmbed notification = changeMessageService.buildPrivateMessage(districtChange);
 
             // user direct message
             List<String> subscribers = subscriptionDAO.getUsernamesSubscribedTo(
@@ -40,9 +38,11 @@ public class NotificationServiceListener implements NotificationService {
             );
 
             // channel message
-            discordBot.broadcastToNotificationChannels(notification);
-            discordBot.broadcastToNotificationChannels(subscribers.size() + " direct messages sent!"); // debug
         });
-        LOGGER.info("send changes notification");
+        LOGGER.info("sent direct message change notifications");
+
+        MessageEmbed broadcastMessage = changeMessageService.buildBroadcastMessage(changes);
+        discordBot.broadcastToNotificationChannels(broadcastMessage);
+        //discordBot.broadcastToNotificationChannels(subscribers.size() + " direct messages sent!"); // debug
     }
 }

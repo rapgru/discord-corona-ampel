@@ -7,6 +7,8 @@ import com.rapgru.ampel.mapper.DataFetchMapper;
 import com.rapgru.ampel.service.data.*;
 import com.rapgru.ampel.service.difference.DistrictDifferenceService;
 import com.rapgru.ampel.service.difference.DistrictDifferenceServiceImpl;
+import com.rapgru.ampel.service.discord.ChangeMessageService;
+import com.rapgru.ampel.service.discord.ChangeMessageServiceImpl;
 import com.rapgru.ampel.service.discord.NotificationService;
 import com.rapgru.ampel.service.discord.NotificationServiceListener;
 import org.slf4j.Logger;
@@ -43,9 +45,12 @@ public class Main {
         LOGGER.info("discord bot started");
         discordBot.awaitReady();
 
+        ChangeMessageService changeMessageService = new ChangeMessageServiceImpl();
+
         NotificationService notificationService = new NotificationServiceListener(
                 subscriptionDAO,
-                discordBot
+                discordBot,
+                changeMessageService
         );
 
         RefreshDataTask refreshDataTask = new RefreshDataTask(

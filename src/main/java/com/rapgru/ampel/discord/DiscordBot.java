@@ -2,6 +2,9 @@ package com.rapgru.ampel.discord;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -49,7 +52,23 @@ public class DiscordBot {
         });
     }
 
+    public void sendDirectMessage(String userId, MessageEmbed message) {
+        User user = discordClient.retrieveUserById(userId).complete();
+        if (user == null) {
+            return;
+        }
+        user.openPrivateChannel().queue(privateChannel -> {
+            privateChannel.sendMessage(message).submit();
+        });
+    }
+
     public void broadcastToNotificationChannels(String message) {
+        discordClient.getTextChannelsByName("warnstufen", true).forEach(textChannel -> {
+            textChannel.sendMessage(message).submit();
+        });
+    }
+
+    public void broadcastToNotificationChannels(MessageEmbed message) {
         discordClient.getTextChannelsByName("warnstufen", true).forEach(textChannel -> {
             textChannel.sendMessage(message).submit();
         });

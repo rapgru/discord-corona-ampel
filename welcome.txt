@@ -1,0 +1,52 @@
+{
+  "content": "Herzlich Willkommen am *Corona Ampel Österreich*-Server! :wave:\n\nHier kannst du eine oder mehrere Gemeinden in Österreich abonnieren und bekommst dann von unserem Bot eine Benachrichtigung, wenn die Farbe der Ampel in deiner Gemeinde umschaltet!",
+  "embeds": [
+    {
+      "title": "Server-Informationen",
+      "description": "Es gibt auf diesem Server nur Text-Channels. Der Nutzen eines jeden Channels ist hier ersichtlich.",
+      "fields": [
+        {
+          "name": "#warnstufen",
+          "value": "In dem Channel <#755721249811988581> werden die Ampelschaltungen aller Gemeinden vom <@!755693035597332551> gepostet. Hier findest du auch Schaltungen von Gemeinden, die du nicht abonniert hast."
+        },
+        {
+          "name": "#gemeinden",
+          "value": "In dem Channel <#756537688143691857> ist eine Liste aller Gemeinden ersichtlich. Siehe hier nach, wenn du eine Gemeinde abonnieren willst, aber unser Bot sie nicht finden kann. Vermutlich hast du dich verschrieben oder einen verkürzten Namen der Gemeinde verwendet. Alternativ kannst du auch deine Gemeinde auf <https://corona-ampel.gv.at> suchen und den dort angezeigten Namen verwenden."
+        },
+        {
+          "name": "#commands",
+          "value": "In dem Channel <#755720275185893437> kannst du mit dem <@!755693035597332551> interagieren."
+        },
+        {
+          "name": "#github",
+          "value": "Im dem Channel <#756182996494712842> werden alle Änderungen an unserem GitHub-Repository <https://github.com/rapgru/discord-corona-ampel> angezeigt."
+        }
+      ]
+    },
+    {
+      "title": "Benützung des Ampel Bots",
+      "description": "Hier erfährst du, wie du dich für Gemeinden an- oder abmelden kannst und welche Nachrichten der Bot versendet. Alle hier gelisteten Aktionen müssen im Channel <#755720275185893437> verwendet werden!",
+      "color": 7785542,
+      "fields": [
+        {
+          "name": "Abonnieren",
+          "value": "Du kannst mit dem Befehl `!subscribe <Name der Gemeinde>` eine Gemeinde abonnieren und wirst nach der Bestätigung vom <@!755693035597332551> über Ampelschaltungen benachrichtigt werden.\n\nUm zum Beispiel die Gemeinde St. Pölten zu abonnieren, verwende `!subscribe St. Pölten`"
+        },
+        {
+          "name": "Deabonnieren",
+          "value": "Du kannst mit dem Befehl `!unsubscribe <Name der Gemeinde>` eine Gemeinde deabonnieren. Du wirst keine Benachrichtigungen für diese Gemeinde mehr bekommen.\n\nUm zum Beispiel die Gemeinde St. Pölten zu de-abonnieren, verwende `!unsubscribe St. Pölten`"
+        }
+      ]
+    },
+    {
+      "title": "Corona Ampel in Österreich",
+      "description": "Regionale Cluster und Hotspots brauchen starke regionale Antworten. Die Corona-Ampel ermöglicht es, abhängig von der epidemischen Lage, Maßnahmen für alle Gesellschafts- und Wirtschaftsbereiche zu setzen. Diese Maßnahmen können dann für das gesamte Bundesgebiet, einzelne Bundesländer oder Bezirke gelten.\n\nDamit ist die Corona-Ampel ein Werkzeug für eine einheitliche, koordinierte und transparente Vorgehensweise der Behörden. Sie informiert die österreichische Bevölkerung über das Risiko in einer bestimmten Region und auch über die eventuellen Maßnahmen, die gesetzt werden.\n\nDie Maßnahmen sind zum Teil bereits rechtlich verankert (vgl. Lockerungsverordnung) oder können auf Basis der derzeitigen Rechtslage bzw. ab der Novellierung des COVID-19-Maßnahmengesetzes und des Epidemiegesetzes 1950 umgesetzt werden. Dies betrifft vor allem den Mund-Nasen-Schutz.",
+      "url": "https://corona-ampel.gv.at",
+      "color": 12595248,
+      "image": {
+        "url": "https://www.sozialministerium.at/dam/jcr:48a36e4f-a8a0-47f6-93e1-c372cf53be1d/200828_Ampel-Grafik_7-rot.jpg"
+      }
+    }
+  ],
+  "username": "rapgru"
+}
