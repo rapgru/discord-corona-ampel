@@ -48,7 +48,7 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
     @Override
     public List<Subscription> getSubscriptionWithUsername(String username) {
         return database
-                .where("username=?", username)
+                .where("userId=?", username)
                 .results(SubscriptionDO.class)
                 .stream()
                 .map(this::toSubscription)
