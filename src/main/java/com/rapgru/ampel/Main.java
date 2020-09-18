@@ -8,13 +8,13 @@ import com.rapgru.ampel.service.data.*;
 import com.rapgru.ampel.service.difference.DistrictDifferenceService;
 import com.rapgru.ampel.service.difference.DistrictDifferenceServiceImpl;
 import com.rapgru.ampel.service.discord.NotificationService;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import com.rapgru.ampel.service.discord.NotificationServiceListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 
-public class Main extends ListenerAdapter {
+public class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws LoginException, InterruptedException {
@@ -25,22 +25,11 @@ public class Main extends ListenerAdapter {
         DataFetchMapper dataFetchMapper = new DataFetchMapper();
         DataFetchDao dataFetchDAO = new DataFetchDaoImpl(ConnectionManager.getDatabase(), dataFetchMapper);
         SubscriptionDAO subscriptionDAO = new SubscriptionDAOImpl(ConnectionManager.getDatabase());
+
         CoronaDataService coronaDataService = new CoronaDataServiceImpl(dataFetchMapper);
         DistrictDifferenceService districtDifferenceService = new DistrictDifferenceServiceImpl();
-        NotificationService notificationService = changes -> LOGGER.info("pushing changes {}", changes);
-        RefreshDataTask refreshDataTask = new RefreshDataTask(
-                coronaDataService,
-                dataFetchDAO,
-                dataFetchMapper,
-                districtDifferenceService,
-                notificationService
-        );
-        CoronaDataFetchScheduler coronaDataFetchScheduler = new CoronaDataFetchSchedulerImpl(refreshDataTask);
 
-        coronaDataFetchScheduler.start();
-        LOGGER.info("Started data fetch scheduler");
-
-        LOGGER.info("start discord bot and block");
+        LOGGER.info("start discord bot");
         DiscordBot discordBot = new DiscordBot(System.getenv("DISCORD_KEY"));
         discordBot.registerCommands(
                 new PingCommand(),
@@ -53,6 +42,25 @@ public class Main extends ListenerAdapter {
                 new SubscribeCommand(subscriptionDAO, coronaDataService),
                 new UnsubscribeCommand(coronaDataService, subscriptionDAO)
         );
+
+        NotificationService notificationService = new NotificationServiceListener(
+                subscriptionDAO,
+                discordBot
+        );
+
+        RefreshDataTask refreshDataTask = new RefreshDataTask(
+                coronaDataService,
+                dataFetchDAO,
+                dataFetchMapper,
+                districtDifferenceService,
+                notificationService
+        );
+
+        CoronaDataFetchScheduler coronaDataFetchScheduler = new CoronaDataFetchSchedulerImpl(refreshDataTask);
+        coronaDataFetchScheduler.start();
+        LOGGER.info("Started data fetch scheduler");
+
+        LOGGER.info("discord bot started and blocking");
         discordBot.connectBlocking();
 
         // graceful shutdown

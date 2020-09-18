@@ -38,11 +38,12 @@ public class UnsubscribeCommand extends Command {
             return;
         }
 
-        // TODO: delete subscription in DAO
-        // subscriptionDAO.deleteSubscription(..)
+        if (message.getMember() == null) {
+            return;
+        }
+        String userId = message.getMember().getUser().getId();
+        subscriptionDAO.getSubscriptionWithUsername(userId).forEach(subscriptionDAO::deleteSubscription);
 
-        channel.sendMessage("Dieses Feature ist noch nicht implementiert.").queue(msg -> {
-            message.addReaction("U+274C").submit();
-        } );
+        channel.sendMessage("Unsubscribed.").submit();
     }
 }

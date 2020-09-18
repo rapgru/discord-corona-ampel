@@ -39,8 +39,8 @@ public class SubscribeCommand extends Command {
         }
 
         String districtName = String.join(" ", args);
-        String username = message.getMember().getUser().getName();
-        List<Subscription> subscriptions = subscriptionDAO.getSubscriptionWithUsername(username);
+        String userId = message.getMember().getUser().getId();
+        List<Subscription> subscriptions = subscriptionDAO.getSubscriptionWithUsername(userId);
 
         // get District from database
         District district = coronaDataService.getDistrictByName(districtName, true).orElse(null);
@@ -50,6 +50,7 @@ public class SubscribeCommand extends Command {
         }
 
         // check if already subscribed
+        //TODO: why not work
         if (subscriptions.stream().anyMatch(sub -> sub.getGkz() == district.getGkz())) {
             sendMessage(channel, "Du bist bereits zu dieser Gemeinde subscribed.");
             LOGGER.info("District " + districtName + " not found.");
@@ -58,7 +59,7 @@ public class SubscribeCommand extends Command {
 
         // store subscription
         sendMessage(channel, "Für Gemeinde " + districtName + " mit GKZ " + district.getGkz() + " subscribed.");
-        subscriptionDAO.storeSubscription(new Subscription(Instant.now(), username, district.getGkz()));
-        LOGGER.info("user " + username + " subscribed to district " + districtName);
+        subscriptionDAO.storeSubscription(new Subscription(Instant.now(), userId, district.getGkz()));
+        LOGGER.info("user " + userId + " subscribed to district " + districtName);
     }
 }

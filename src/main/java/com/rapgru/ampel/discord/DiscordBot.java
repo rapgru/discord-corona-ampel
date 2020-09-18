@@ -2,6 +2,7 @@ package com.rapgru.ampel.discord;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,5 +34,15 @@ public class DiscordBot {
 
     public void registerCommands(Command... commands) {
         commandExecutor.addCommands(commands);
+    }
+
+    public void sendNotification(String userId, String message) {
+        User user = discordClient.getUserById(userId);
+        if (user == null) {
+            return;
+        }
+        user.openPrivateChannel().queue(privateChannel -> {
+            privateChannel.sendMessage(message).submit();
+        });
     }
 }
