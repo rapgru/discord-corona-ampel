@@ -20,6 +20,11 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
     }
 
     @Override
+    public void deleteSubscription(Subscription subscription) {
+        database.where("id=?", subscription.getId()).delete();
+    }
+
+    @Override
     public void storeSubscription(Subscription subscription) {
         SubscriptionDO subscriptionDO = new SubscriptionDO(
                 subscription.getDate().toString(),
@@ -52,6 +57,7 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
 
     private Subscription toSubscription(SubscriptionDO subscriptionDO) {
         return new Subscription(
+                subscriptionDO.getId(),
                 Instant.parse(subscriptionDO.getDate()),
                 subscriptionDO.getUserId(),
                 subscriptionDO.getGkz()

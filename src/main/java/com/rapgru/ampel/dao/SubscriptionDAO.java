@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SubscriptionDAO {
 
-
+    void deleteSubscription(Subscription subscription);
 
     void storeSubscription(Subscription subscription);
 
