@@ -12,6 +12,12 @@ public class Subscription {
 
     private final int gkz;
 
+    public Subscription(Instant date, String userId, int gkz) {
+        this.date = date;
+        this.userId = userId;
+        this.gkz = gkz;
+    }
+
     public Subscription(long id, Instant date, String userId, int gkz) {
         this.id = id;
         this.date = date;
