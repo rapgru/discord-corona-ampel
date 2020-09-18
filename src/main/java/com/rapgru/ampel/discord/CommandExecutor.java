@@ -49,7 +49,7 @@ public class CommandExecutor extends ListenerAdapter {
                             event.getMessage(),
                             Arrays.copyOfRange(args, 1, args.length)
                     );
-                    LOGGER.info("User " + member.getUser().getName() + " executed command " + command.getName());
+                    LOGGER.info("User {} executed command {}", command.getName(), member.getUser().getName());
                 });
     }
 

@@ -56,13 +56,13 @@ public class SubscribeCommand extends Command {
         // check if already subscribed
         if (subscriptions.stream().anyMatch(sub -> sub.getGkz() == district.getGkz())) {
             sendMessage(channel, "Du bist bereits zu dieser Gemeinde subscribed.");
-            LOGGER.info("District " + districtName + " not found.");
+            LOGGER.info("District {} not found.", districtName);
             return;
         }
 
         // store subscription
         sendMessage(channel, "Für Gemeinde " + districtName + " mit GKZ " + district.getGkz() + " subscribed.");
         subscriptionDAO.storeSubscription(new Subscription(Instant.now(), userId, district.getGkz()));
-        LOGGER.info("user " + userId + " subscribed to district " + districtName);
+        LOGGER.info("userId {} subscribed to district {}", userId, districtName);
     }
 }
