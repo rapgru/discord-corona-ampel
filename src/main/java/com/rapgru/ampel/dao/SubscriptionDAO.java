@@ -10,6 +10,8 @@ public interface SubscriptionDAO {
 
     void storeSubscription(Subscription subscription);
 
+    List<String> getUsernamesSubscribedTo(int gkz);
+
     List<Subscription> getSubscriptionWithUsername(String username);
 
 }

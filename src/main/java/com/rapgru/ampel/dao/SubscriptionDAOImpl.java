@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SubscriptionDAOImpl implements SubscriptionDAO {
@@ -24,7 +23,7 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
     public void storeSubscription(Subscription subscription) {
         SubscriptionDO subscriptionDO = new SubscriptionDO(
                 subscription.getDate().toString(),
-                subscription.getUsername(),
+                subscription.getUserId(),
                 subscription.getGkz()
         );
 
@@ -32,8 +31,20 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
     }
 
     @Override
+    public List<String> getUsernamesSubscribedTo(int gkz) {
+        return database
+                .where("gkz=?", gkz)
+                .results(SubscriptionDO.class)
+                .stream()
+                .map(SubscriptionDO::getUserId)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<Subscription> getSubscriptionWithUsername(String username) {
-        return database.where("username=?", username).results(SubscriptionDO.class)
+        return database
+                .where("username=?", username)
+                .results(SubscriptionDO.class)
                 .stream()
                 .map(this::toSubscription)
                 .collect(Collectors.toList());
@@ -42,7 +53,7 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
     private Subscription toSubscription(SubscriptionDO subscriptionDO) {
         return new Subscription(
                 Instant.parse(subscriptionDO.getDate()),
-                subscriptionDO.getUsername(),
+                subscriptionDO.getUserId(),
                 subscriptionDO.getGkz()
         );
     }

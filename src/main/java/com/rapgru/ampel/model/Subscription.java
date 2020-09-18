@@ -1,20 +1,18 @@
 package com.rapgru.ampel.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.time.Instant;
 
 public class Subscription {
 
     private final Instant date;
 
-    private final String username;
+    private final String userId;
 
     private final int gkz;
 
-    public Subscription(Instant date, String username, int gkz) {
+    public Subscription(Instant date, String userId, int gkz) {
         this.date = date;
-        this.username = username;
+        this.userId = userId;
         this.gkz = gkz;
     }
 
@@ -22,8 +20,8 @@ public class Subscription {
         return date;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserId() {
+        return userId;
     }
 
     public int getGkz() {

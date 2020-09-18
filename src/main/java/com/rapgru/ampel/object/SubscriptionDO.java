@@ -11,15 +11,15 @@ public class SubscriptionDO {
 
     private String date;
 
-    private String username;
+    private String userId;
 
     private int gkz;
 
     public SubscriptionDO() {}
 
-    public SubscriptionDO(String date, String username, int gkz) {
+    public SubscriptionDO(String date, String userId, int gkz) {
         this.date = date;
-        this.username = username;
+        this.userId = userId;
         this.gkz = gkz;
     }
 
@@ -41,12 +41,12 @@ public class SubscriptionDO {
         this.date = date;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public int getGkz() {
