@@ -21,7 +21,7 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
 
     @Override
     public void deleteSubscription(Subscription subscription) {
-        database.where("id=?", subscription.getId()).delete();
+        database.where("id=?", subscription.getId()).table("t_subscription").delete();
     }
 
     @Override
