@@ -3,9 +3,12 @@ package com.rapgru.ampel.discord;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.ShutdownEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 
 public class DiscordBot {
@@ -20,9 +23,9 @@ public class DiscordBot {
         commandExecutor = new CommandExecutor(discordClient);
     }
 
-    public void connectBlocking() throws InterruptedException {
-        LOGGER.info("connect bot and block");
+    public void awaitReady() throws InterruptedException {
         discordClient.awaitReady();
+        LOGGER.info("discord bot is ready");
     }
 
     public void shutdown() {
@@ -49,6 +52,15 @@ public class DiscordBot {
     public void broadcastToNotificationChannels(String message) {
         discordClient.getTextChannelsByName("warnstufen", true).forEach(textChannel -> {
             textChannel.sendMessage(message).submit();
+        });
+    }
+
+    public void addShutdownHook(Runnable shutdownHook) {
+        discordClient.addEventListener(new ListenerAdapter() {
+            @Override
+            public void onShutdown(@Nonnull ShutdownEvent event) {
+                shutdownHook.run();
+            }
         });
     }
 }

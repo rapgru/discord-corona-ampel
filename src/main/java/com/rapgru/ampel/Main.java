@@ -40,6 +40,8 @@ public class Main {
                 new SubscribeCommand(subscriptionDAO, coronaDataService),
                 new UnsubscribeCommand(coronaDataService, subscriptionDAO)
         );
+        LOGGER.info("discord bot started");
+        discordBot.awaitReady();
 
         NotificationService notificationService = new NotificationServiceListener(
                 subscriptionDAO,
@@ -58,17 +60,18 @@ public class Main {
         coronaDataFetchScheduler.start();
         LOGGER.info("Started data fetch scheduler");
 
-        LOGGER.info("discord bot started and blocking");
-        discordBot.connectBlocking();
-
-        // graceful shutdown
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        Runnable shutdownHook = () -> {
             LOGGER.info("shutting down discord bot");
             discordBot.shutdown();
 
             LOGGER.info("stopping coronaDataFetchScheduler");
             coronaDataFetchScheduler.stop();
-        }));
+            LOGGER.info("gracefully shutdown application");
+        };
+
+        // graceful shutdown
+        Runtime.getRuntime().addShutdownHook(new Thread(shutdownHook));
+        discordBot.addShutdownHook(shutdownHook);
     }
 
     private static void validateProgramArguments(String[] arguments) {
