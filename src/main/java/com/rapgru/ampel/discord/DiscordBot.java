@@ -45,4 +45,10 @@ public class DiscordBot {
             privateChannel.sendMessage(message).submit();
         });
     }
+
+    public void broadcastToNotificationChannels(String message) {
+        discordClient.getTextChannelsByName("warnstufen", true).forEach(textChannel -> {
+            textChannel.sendMessage(message).submit();
+        });
+    }
 }

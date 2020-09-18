@@ -20,8 +20,6 @@ public class Main {
     public static void main(String[] args) throws LoginException, InterruptedException {
         validateProgramArguments(args); // check if args equals 0
 
-        //ConnectionManager.createTables();
-
         DataFetchMapper dataFetchMapper = new DataFetchMapper();
         DataFetchDao dataFetchDAO = new DataFetchDaoImpl(ConnectionManager.getDatabase(), dataFetchMapper);
         SubscriptionDAO subscriptionDAO = new SubscriptionDAOImpl(ConnectionManager.getDatabase());

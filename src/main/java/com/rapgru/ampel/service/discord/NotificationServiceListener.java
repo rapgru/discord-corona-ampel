@@ -22,6 +22,14 @@ public class NotificationServiceListener implements NotificationService {
 
     @Override
     public void pushChanges(List<DistrictChange> changes) {
+        notifyUsers(changes);
+        LOGGER.info("notify changes to users");
+
+        broadcastChangesToChannel(changes);
+        LOGGER.info("broadcast changes to channel");
+    }
+
+    private void notifyUsers(List<DistrictChange> changes) {
         changes.forEach(districtChange -> {
             String notification = String.format(
                     "Die Warnstufe für die Gemeinde {} wurde geändert von {} auf {}. \n Begründung: {}",
@@ -30,9 +38,23 @@ public class NotificationServiceListener implements NotificationService {
                     districtChange.getTo().name(),
                     districtChange.getDataPoint().getReason()
             );
+
             subscriptionDAO.getUsernamesSubscribedTo(districtChange.getDataPoint().getDistrict().getGkz()).forEach(
                     userId -> discordBot.sendNotification(userId, notification)
             );
+        });
+    }
+
+    private void broadcastChangesToChannel(List<DistrictChange> changes) {
+        changes.forEach(districtChange -> {
+            String notification = String.format(
+                    "Warnstufe von Gemeinde {} wurde von {} zu {} geändert \nBegründung: {}",
+                    districtChange.getDataPoint().getDistrict().getName(),
+                    districtChange.getTo().name(),
+                    districtChange.getFrom().name(),
+                    districtChange.getDataPoint().getReason()
+            );
+            discordBot.broadcastToNotificationChannels(notification);
         });
     }
 }
