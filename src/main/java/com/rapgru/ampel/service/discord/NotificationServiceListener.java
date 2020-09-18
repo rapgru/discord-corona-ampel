@@ -22,39 +22,27 @@ public class NotificationServiceListener implements NotificationService {
 
     @Override
     public void pushChanges(List<DistrictChange> changes) {
-        notifyUsers(changes);
-        LOGGER.info("notify changes to users");
-
-        broadcastChangesToChannel(changes);
-        LOGGER.info("broadcast changes to channel");
-    }
-
-    private void notifyUsers(List<DistrictChange> changes) {
         changes.forEach(districtChange -> {
             String notification = String.format(
-                    "Die Warnstufe für die Gemeinde {} wurde geändert von {} auf {}. \n Begründung: {}",
+                    "Die Warnstufe für die Gemeinde %s wurde geändert von %s auf %s. \nGrund: %s",
                     districtChange.getDataPoint().getDistrict().getName(),
                     districtChange.getFrom().name(),
                     districtChange.getTo().name(),
                     districtChange.getDataPoint().getReason()
             );
 
-            subscriptionDAO.getUsernamesSubscribedTo(districtChange.getDataPoint().getDistrict().getGkz()).forEach(
-                    userId -> discordBot.sendNotification(userId, notification)
+            // user direct message
+            List<String> subscribers = subscriptionDAO.getUsernamesSubscribedTo(
+                    districtChange.getDataPoint().getDistrict().getGkz()
             );
-        });
-    }
+            subscribers.forEach(
+                    userId -> discordBot.sendDirectMessage(userId, notification)
+            );
 
-    private void broadcastChangesToChannel(List<DistrictChange> changes) {
-        changes.forEach(districtChange -> {
-            String notification = String.format(
-                    "Warnstufe von Gemeinde {} wurde von {} zu {} geändert \nBegründung: {}",
-                    districtChange.getDataPoint().getDistrict().getName(),
-                    districtChange.getTo().name(),
-                    districtChange.getFrom().name(),
-                    districtChange.getDataPoint().getReason()
-            );
+            // channel message
             discordBot.broadcastToNotificationChannels(notification);
+            discordBot.broadcastToNotificationChannels(subscribers.size() + " direct messages sent!"); // debug
         });
+        LOGGER.info("send changes notification");
     }
 }

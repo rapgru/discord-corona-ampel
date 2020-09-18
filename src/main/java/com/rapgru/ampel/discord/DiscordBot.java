@@ -39,7 +39,7 @@ public class DiscordBot {
         commandExecutor.addCommands(commands);
     }
 
-    public void sendNotification(String userId, String message) {
+    public void sendDirectMessage(String userId, String message) {
         User user = discordClient.getUserById(userId);
         if (user == null) {
             return;
