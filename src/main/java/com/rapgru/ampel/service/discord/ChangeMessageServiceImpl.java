@@ -24,7 +24,7 @@ public class ChangeMessageServiceImpl implements ChangeMessageService {
     public MessageEmbed buildBroadcastMessage(List<DistrictChange> changes) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
-        if(changes.size() > 1) {
+        if(changes.size() == 1) {
             embedBuilder.setTitle("Ampelschaltungen f\u00fcr 1 Gemeinde");
         } else {
             embedBuilder.setTitle(String.format("Ampelschaltungen f\u00fcr %d Gemeinden", changes.size()));
@@ -32,8 +32,8 @@ public class ChangeMessageServiceImpl implements ChangeMessageService {
 
         embedBuilder.setColor(Color.pink);
 
-        embedBuilder.setDescription(String.format("Es gab Ampelschaltungen f\u00fcr %d \u00e4sterreichische Gemeinden." +
-                "Siehe dir die \u00dcberg\u00e4nge unterbei an", changes.size()));
+        embedBuilder.setDescription(String.format("Es gab Ampelschaltungen f\u00fcr %d \u00f6sterreichische Gemeinden." +
+                " Siehe dir die \u00dcberg\u00e4nge unterbei an", changes.size()));
 
         changes.forEach(districtChange -> addTransitionField(embedBuilder, districtChange));
 
@@ -43,8 +43,8 @@ public class ChangeMessageServiceImpl implements ChangeMessageService {
     private void addTransitionField(EmbedBuilder embedBuilder, DistrictChange change) {
         embedBuilder.addField(
                 change.getDataPoint().getDistrict().getName(),
-                String.format("Die Warnstufe der Gemeinde **%s** wurde von **%s** auf **%s** ge\u00e4ndert. \n" +
-                        "\u00dcbergang: :%s: :arrow_right: :%s:" +
+                String.format("Die Warnstufe der Gemeinde **%s** wurde von **%s** auf **%s** ge\u00e4ndert. \n\n" +
+                        "\u00dcbergang: :%s: :arrow_right: :%s:\n" +
                         "Grund: %s",
                         change.getDataPoint().getDistrict().getName(),
                         change.getFrom().getText(),
@@ -60,7 +60,7 @@ public class ChangeMessageServiceImpl implements ChangeMessageService {
     private MessageEmbed buildPrivateMessage(String gemeinde, WarningColor from, WarningColor to, String reason) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
-        embedBuilder.setTitle(String.format("Ampelschaltung für %s", gemeinde));
+        embedBuilder.setTitle(String.format("Ampelschaltung f\u00fcr %s", gemeinde));
 
         embedBuilder.setColor(to.getColor());
 
