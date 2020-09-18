@@ -11035,6 +11035,16 @@
   ],
   "Kalenderwochen": [
     {
+      "KW": 39,
+      "Warnstufen": [
+        {
+          "GKZ": "31524",
+          "Warnstufe": "3",
+          "Begruendung": "Viele Menschen krank"
+        }
+      ]
+    },
+    {
       "KW": 38,
       "Warnstufen": [
         {
