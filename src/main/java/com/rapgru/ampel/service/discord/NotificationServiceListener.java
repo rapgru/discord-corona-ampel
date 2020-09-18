@@ -24,7 +24,7 @@ public class NotificationServiceListener implements NotificationService {
     public void pushChanges(List<DistrictChange> changes) {
         changes.forEach(districtChange -> {
             String notification = String.format(
-                    "Die Warnstufe für die Gemeinde %s wurde geändert von %s auf %s. \nGrund: %s",
+                    "Die Warnstufe f\u00fcr die Gemeinde %s wurde ge\u00e4ndert von %s auf %s. \nGrund: %s",
                     districtChange.getDataPoint().getDistrict().getName(),
                     districtChange.getFrom().name(),
                     districtChange.getTo().name(),
