@@ -54,7 +54,6 @@ public class SubscribeCommand extends Command {
         }
 
         // check if already subscribed
-        //TODO: why not work
         if (subscriptions.stream().anyMatch(sub -> sub.getGkz() == district.getGkz())) {
             sendMessage(channel, "Du bist bereits zu dieser Gemeinde subscribed.");
             LOGGER.info("District " + districtName + " not found.");
