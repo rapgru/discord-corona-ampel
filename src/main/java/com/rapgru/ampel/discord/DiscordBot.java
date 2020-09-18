@@ -40,7 +40,7 @@ public class DiscordBot {
     }
 
     public void sendDirectMessage(String userId, String message) {
-        User user = discordClient.getUserById(userId);
+        User user = discordClient.retrieveUserById(userId).complete();
         if (user == null) {
             return;
         }
