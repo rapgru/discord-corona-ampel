@@ -41,7 +41,7 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
                 .where("gkz=?", gkz)
                 .results(SubscriptionDO.class)
                 .stream()
-                .map(SubscriptionDO::getUserId)
+                .map(SubscriptionDO::getUserid)
                 .collect(Collectors.toList());
     }
 
@@ -59,7 +59,7 @@ public class SubscriptionDAOImpl implements SubscriptionDAO {
         return new Subscription(
                 subscriptionDO.getId(),
                 Instant.parse(subscriptionDO.getDate()),
-                subscriptionDO.getUserId(),
+                subscriptionDO.getUserid(),
                 subscriptionDO.getGkz()
         );
     }

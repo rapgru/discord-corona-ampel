@@ -40,11 +40,12 @@ public class DataFetchDaoImpl implements DataFetchDao {
                 .results(DataFetchDo.class)
                 .stream()
                 .max(Comparator.comparing(DataFetchDo::getDate))
-                .map(dataFetchDo -> Tuple.tuple(dataFetchDo, database
-                        .results(DistrictDataDo.class)
-                        .stream()
-                        .filter(d -> d.getDataFetchId() == dataFetchDo.getId())
-                        .collect(Collectors.toList()))
+                .map(dataFetchDo -> Tuple.tuple(
+                        dataFetchDo,
+                        database
+                                .where("datafetchid=?", dataFetchDo.getId())
+                                .results(DistrictDataDo.class)
+                    )
                 )
                 .map(dataFetchMapper::toDataFetch);
     }

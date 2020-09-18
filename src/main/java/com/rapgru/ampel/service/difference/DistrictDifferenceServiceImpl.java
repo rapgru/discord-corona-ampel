@@ -10,13 +10,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DistrictDifferenceServiceImpl implements DistrictDifferenceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DistrictDifferenceServiceImpl.class);
 
     @Override
     public List<DistrictChange> changes(List<DistrictData> prev, List<DistrictData> after) {
-        return Seq.seq(prev)
+        return prev.stream()
                 .map(
                         districtData -> Tuple.tuple(
                                 districtData,
@@ -30,13 +31,13 @@ public class DistrictDifferenceServiceImpl implements DistrictDifferenceService 
                 })
                 .filter(t -> t.v2.isPresent())
                 .map(t -> t.map2(Optional::get))
-                .filter(t -> !t.v1.equals(t.v2))
+                .filter(t -> !t.v1.getWarningColor().equals(t.v2.getWarningColor()))
                 .map(t -> new DistrictChange(
                         t.v1.getWarningColor(),
                         t.v2.getWarningColor(),
-                        t.v1.getWarningColor().compareTo(t.v2.getWarningColor()) > 0 ? DistrictChangeDirection.HIGHER : DistrictChangeDirection.LOWER,
+                        t.v1.getWarningColor().compareTo(t.v2.getWarningColor()) < 0 ? DistrictChangeDirection.HIGHER : DistrictChangeDirection.LOWER,
                         t.v2
                 ))
-                .toList();
+                .collect(Collectors.toList());
     }
 }

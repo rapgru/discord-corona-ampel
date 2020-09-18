@@ -1,9 +1,5 @@
 package com.rapgru.ampel.object;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-import com.rapgru.ampel.model.WarningColor;
-
 import javax.persistence.*;
 
 @Table(name="t_district")
@@ -12,11 +8,11 @@ public class DistrictDataDo {
 
     private long id;
 
-    private long dataFetchId;
+    private long datafetchid;
 
     private int gkz;
 
-    private WarningColor warningColor;
+    private String warningcolor;
 
     private String name;
 
@@ -30,13 +26,12 @@ public class DistrictDataDo {
         this.gkz = gkz;
     }
 
-    @Enumerated(EnumType.ORDINAL)
-    public WarningColor getWarningColor() {
-        return warningColor;
+    public String getWarningcolor() {
+        return warningcolor;
     }
 
-    public void setWarningColor(WarningColor warningColor) {
-        this.warningColor = warningColor;
+    public void setWarningcolor(String warningcolor) {
+        this.warningcolor = warningcolor;
     }
 
     @Id
@@ -65,10 +60,10 @@ public class DistrictDataDo {
         this.reason = reason;
     }
 
-    public DistrictDataDo(long dataFetchId, int gkz, WarningColor warningColor, String name, String reason) {
-        this.dataFetchId = dataFetchId;
+    public DistrictDataDo(long datafetchid, int gkz, String warningcolor, String name, String reason) {
+        this.datafetchid = datafetchid;
         this.gkz = gkz;
-        this.warningColor = warningColor;
+        this.warningcolor = warningcolor;
         this.name = name;
         this.reason = reason;
     }
@@ -76,11 +71,11 @@ public class DistrictDataDo {
     public DistrictDataDo() {
     }
 
-    public long getDataFetchId() {
-        return dataFetchId;
+    public long getDatafetchid() {
+        return datafetchid;
     }
 
-    public void setDataFetchId(long dataFetchId) {
-        this.dataFetchId = dataFetchId;
+    public void setDatafetchid(long datafetchid) {
+        this.datafetchid = datafetchid;
     }
 }

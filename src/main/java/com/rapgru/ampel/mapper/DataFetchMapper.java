@@ -1,9 +1,7 @@
 package com.rapgru.ampel.mapper;
 
-import com.rapgru.ampel.dao.DataFetchDao;
 import com.rapgru.ampel.dto.CoronaDataDTO;
 import com.rapgru.ampel.dto.DistrictDTO;
-import com.rapgru.ampel.dto.DistrictDataDTO;
 import com.rapgru.ampel.dto.WeekDTO;
 import com.rapgru.ampel.model.DataFetch;
 import com.rapgru.ampel.model.District;
@@ -14,7 +12,6 @@ import com.rapgru.ampel.object.DistrictDataDo;
 import org.jooq.lambda.tuple.Tuple;
 import org.jooq.lambda.tuple.Tuple2;
 
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
@@ -45,29 +42,19 @@ public class DataFetchMapper {
     }
 
     private List<DistrictData> mapToDistrictDataList(WeekDTO currentWeekDTO, List<DistrictDTO> districtDTOS){
-        return districtDTOS.stream()
-                .filter(districtDTO -> districtDTO.getType().equals("Gemeinde"))
-                .map(districtDTO -> mapToDistrictData(currentWeekDTO, districtDTO))
-                .collect(Collectors.toList());
-    }
-
-    private DistrictData mapToDistrictData(WeekDTO currentWeekDTO, DistrictDTO districtDTO){
-        return currentWeekDTO.getDistrictDataDTOList()
-                .stream()
-                .filter(d -> d.getGkz().equals(districtDTO.getGkz()))
-                .findAny()
-                .map(d -> Tuple.tuple(d, toWarningColor(d.getWarningColor())))
-                .filter(d -> d.v2.isPresent())
+        return currentWeekDTO.getDistrictDataDTOList().stream()
+                .map(districtDataDTO -> Tuple.tuple(districtDataDTO,
+                            districtDTOS.stream().filter(d -> d.getGkz().equals(districtDataDTO.getGkz())).findAny()
+                        ))
+                .filter(t -> t.v2.isPresent())
+                .map(t -> t.map2(Optional::get))
+                .filter(t -> t.v2.getType().equals("Gemeinde"))
                 .map(d -> new DistrictData(
-                        d.v2.get(),
-                        mapToDistrict(districtDTO),
+                        toWarningColor(d.v1.getWarningColor()).orElse(WarningColor.GREEN),
+                        mapToDistrict(d.v2),
                         d.v1.getReason()
                 ))
-                .orElse(new DistrictData(
-                        WarningColor.GREEN,
-                        mapToDistrict(districtDTO),
-                        ""
-                ));
+                .collect(Collectors.toList());
     }
 
     private District mapToDistrict(DistrictDTO districtDTO) {
@@ -104,7 +91,7 @@ public class DataFetchMapper {
         return new DistrictDataDo(
                 id,
                 districtData.getDistrict().getGkz(),
-                districtData.getWarningColor(),
+                districtData.getWarningColor().name(),
                 districtData.getDistrict().getName(),
                 districtData.getReason()
         );
@@ -122,7 +109,7 @@ public class DataFetchMapper {
 
     private DistrictData toDistrictData(DistrictDataDo districtDataDO) {
         return new DistrictData(
-                districtDataDO.getWarningColor(),
+                WarningColor.valueOf(districtDataDO.getWarningcolor()),
                 new District(
                         districtDataDO.getGkz(),
                         districtDataDO.getName()
