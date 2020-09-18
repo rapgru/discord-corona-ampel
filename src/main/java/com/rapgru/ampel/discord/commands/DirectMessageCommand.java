@@ -24,8 +24,7 @@ public class DirectMessageCommand extends AdminCommand {
 
         member.getUser().openPrivateChannel().queue(privateChannel -> {
             StringBuilder directMessageBuilder = new StringBuilder();
-            // offset of 1 to skip commandName
-            for (int i = 1; i < args.length; i++) {
+            for (int i = 0; i < args.length; i++) {
                 directMessageBuilder.append(args[i]);
                 directMessageBuilder.append(" ");
             }
