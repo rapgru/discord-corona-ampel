@@ -32,16 +32,18 @@ public class CheckSubscriptionCommand extends Command {
             return;
         }
 
-        String username = member.getUser().getName();
-        List<Subscription> subscriptions = subscriptionDAO.getSubscriptionWithUsername(username);
+        String userId = member.getUser().getId();
+        List<Subscription> subscriptions = subscriptionDAO.getSubscriptionWithUsername(userId);
 
         if (subscriptions.isEmpty()) {
-            sendMessage(channel, username + " hat keine subscriptions.");
+            sendMessage(channel, member.getUser().getName() + " hat keine subscriptions.");
             return;
         }
 
         // send subscriptions to user
-        StringBuilder subscriptionListBuilder = new StringBuilder(username + " hat folgende Gemeinden subscribed: ");
+        StringBuilder subscriptionListBuilder = new StringBuilder(
+                member.getUser().getName() + " hat folgende Gemeinden subscribed: "
+        );
         subscriptions.forEach(subscription -> {
             subscriptionListBuilder.append(subscription.getGkz()); //TODO: name of district instead of Gkz
             subscriptionListBuilder.append(" ");
