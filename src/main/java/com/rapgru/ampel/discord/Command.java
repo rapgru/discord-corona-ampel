@@ -6,16 +6,19 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public abstract class Command {
+
+    protected static final long REMOVAL_TIME = 5;
 
     private final List<String> roles = new ArrayList<>();
 
     public abstract void execute(Message message, String[] args);
 
     public void roleNotFound(Message message) {
-        message.getChannel().sendMessage("You dont have permissions for this command.").submit();
-    };
+        sendTimedMessage(message.getChannel(), "You dont have permissions for this command.");
+    }
 
     public abstract String getName();
 
@@ -31,7 +34,9 @@ public abstract class Command {
         roles.addAll(Arrays.asList(roleNames));
     }
 
-    protected static void sendMessage(MessageChannel channel, String message) {
-        channel.sendMessage(message).submit();
+    protected static void sendTimedMessage(MessageChannel channel, String message) {
+        channel.sendMessage(message).queue(msg -> {
+            msg.delete().queueAfter(REMOVAL_TIME, TimeUnit.SECONDS);
+        });
     }
 }

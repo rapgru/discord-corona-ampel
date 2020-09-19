@@ -27,12 +27,12 @@ public class CheckSubscriptionCommand extends Command {
         MessageChannel channel = message.getChannel();
         Member member = message.getMember();
         if (member == null) {
-            sendMessage(channel, "can not find member.");
+            sendTimedMessage(channel, "can not find member.");
             return;
         }
 
         if (member.getUser().isBot()) {
-            sendMessage(channel, "this command is only for humans.");
+            sendTimedMessage(channel, "this command is only for humans.");
             return;
         }
 
@@ -40,7 +40,7 @@ public class CheckSubscriptionCommand extends Command {
         List<Subscription> subscriptions = subscriptionDAO.getSubscriptionWithUsername(userId);
 
         if (subscriptions.isEmpty()) {
-            sendMessage(channel, member.getUser().getName() + " hat keine subscriptions.");
+            sendTimedMessage(channel, member.getUser().getName() + " hat keine subscriptions.");
             return;
         }
 
@@ -52,6 +52,6 @@ public class CheckSubscriptionCommand extends Command {
             subscriptionListBuilder.append(subscription.getGkz()); //TODO: name of district instead of Gkz
             subscriptionListBuilder.append(" ");
         });
-        sendMessage(channel, subscriptionListBuilder.toString());
+        sendTimedMessage(channel, subscriptionListBuilder.toString());
     }
 }

@@ -33,33 +33,34 @@ public class UnsubscribeCommand extends Command {
     public void execute(Message message, String[] args) {
         MessageChannel channel = message.getChannel();
         if (args.length == 0) {
-            sendMessage(channel, "Falsche Verwendung, bitte versuche es nochmal. \n```!unsubscribe <Gemeinde>```");
+            sendTimedMessage(channel, "Falsche Verwendung, bitte versuche es nochmal. \n```!unsubscribe <Gemeinde>```");
             return;
         }
 
         String districtName = String.join(" ", args);
         District district = coronaDataService.getDistrictByName(districtName, true).orElse(null);
         if (district == null) {
-            sendMessage(channel, "Gemeinde '" + districtName + "' konnte nicht gefunden werden");
+            sendTimedMessage(channel, "Gemeinde '" + districtName + "' konnte nicht gefunden werden");
             LOGGER.info("District {} can not be found.", districtName);
             return;
         }
 
         if (message.getMember() == null) {
+            LOGGER.warn("member of message is null");
             return;
         }
+
         String userId = message.getMember().getUser().getId();
         List<Subscription> subscriptions = subscriptionDAO.getSubscriptionWithUsername(userId);
-
         if (subscriptions.isEmpty()) {
-            sendMessage(channel, "Du bist nicht bei der Gemeinde " + districtName + " subscribed");
+            sendTimedMessage(channel, "Du bist nicht bei der Gemeinde " + districtName + " subscribed");
             return;
         }
         subscriptions.stream()
                 .filter(subscription -> subscription.getGkz() == district.getGkz())
                 .forEach(subscription -> {
                     subscriptionDAO.deleteSubscription(subscription);
-                    sendMessage(channel, "Unsubscribed von Gemeinde " + districtName);
+                    sendTimedMessage(channel, "Unsubscribed von Gemeinde " + districtName);
                     LOGGER.info("userId {} unsubscribed from district {}", userId, districtName);
                 });
     }
