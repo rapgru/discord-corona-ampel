@@ -37,7 +37,7 @@ public class CommandExecutor extends ListenerAdapter {
             return;
         }
         // fix exception when event was not in an text channel...
-        if (!event.isFromType(ChannelType.TEXT)) {
+        if (!event.isFromType(ChannelType.TEXT) || member.getUser().isBot()) {
             return;
         }
         TextChannel channel = event.getTextChannel();
@@ -47,10 +47,21 @@ public class CommandExecutor extends ListenerAdapter {
             return;
         }
 
+        // delete non command messages in command channel
+        if (channel.getId().equals("755720275185893437") && !rawMessage.startsWith("!") && !event.isWebhookMessage()) {
+            event.getMessage().delete().submit()
+                    .thenCompose(aVoid ->
+                            event.getChannel().sendMessage("Um zu Schreiben wechsle bitte in den #chat channel.").submit())
+                    .thenCompose(msg -> msg.delete().submitAfter(Command.REMOVAL_TIME, TimeUnit.SECONDS));
+        }
+
         // check command prefix
         if (!rawMessage.startsWith(COMMAND_PREFIX)) {
             return;
         }
+
+        event.getMessage().addReaction("U+2611").submit();
+        event.getMessage().delete().queueAfter(Command.REMOVAL_TIME, TimeUnit.SECONDS);
 
         // delegate execution to corresponding command class
         commands.stream()
@@ -64,15 +75,12 @@ public class CommandExecutor extends ListenerAdapter {
                     }
 
                     // execute command
-                    event.getMessage().addReaction("U+2611").submit();
-                    event.getMessage().delete().queueAfter(Command.REMOVAL_TIME, TimeUnit.SECONDS);
-                    LOGGER.info("User {} executed command {}", command.getName(), member.getUser().getName());
-                    // execute now
                     String[] args = rawMessage.split(" ");
                     command.execute(
                             event.getMessage(),
                             Arrays.copyOfRange(args, 1, args.length)
                     );
+                    LOGGER.info("User {} executed command {}", command.getName(), member.getUser().getName());
                 });
     }
 

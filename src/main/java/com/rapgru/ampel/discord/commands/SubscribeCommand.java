@@ -51,13 +51,13 @@ public class SubscribeCommand extends Command {
         District district = coronaDataService.getDistrictByName(districtName, true).orElse(null);
         if (district == null) {
             sendTimedMessage(channel, "Gemeinde '" + districtName + "' konnte nicht gefunden werden.");
+            LOGGER.info("District {} not found.", districtName);
             return;
         }
 
         // check if already subscribed
         if (subscriptions.stream().anyMatch(sub -> sub.getGkz() == district.getGkz())) {
             sendTimedMessage(channel, "Du bist bereits zu dieser Gemeinde subscribed.");
-            LOGGER.info("District {} not found.", districtName);
             return;
         }
 
