@@ -29,22 +29,9 @@ public class Main {
         CoronaDataService coronaDataService = new CoronaDataServiceImpl(dataFetchMapper);
         DistrictDifferenceService districtDifferenceService = new DistrictDifferenceServiceImpl();
 
-        LOGGER.info("start discord bot");
-        DiscordBot discordBot = new DiscordBot(System.getenv("DISCORD_KEY"));
-        discordBot.registerCommands(
-                new PingCommand(),
-                new StopCommand(),
-                new DirectMessageCommand(),
-                new NoPermissionCommand(),
-                new CheckSubscriptionCommand(subscriptionDAO),
-                new SubscribeCommand(subscriptionDAO, coronaDataService),
-                new UnsubscribeCommand(coronaDataService, subscriptionDAO)
-        );
-        LOGGER.info("discord bot started");
-        discordBot.awaitReady();
+        DiscordBot discordBot = setupDiscordBot(subscriptionDAO, coronaDataService);
 
         ChangeMessageService changeMessageService = new ChangeMessageServiceImpl();
-
         NotificationService notificationService = new NotificationServiceListener(
                 subscriptionDAO,
                 discordBot,
@@ -81,5 +68,24 @@ public class Main {
         if (arguments.length != 0) {
             throw new IllegalArgumentException("no arguments allowed for this application");
         }
+    }
+
+    private static DiscordBot setupDiscordBot(SubscriptionDAO subscriptionDAO, CoronaDataService coronaDataService)
+            throws LoginException, InterruptedException {
+        LOGGER.info("start discord bot");
+        DiscordBot discordBot = new DiscordBot(System.getenv("DISCORD_KEY"));
+        discordBot.registerCommands(
+                new PingCommand(),
+                new StopCommand(),
+                new DirectMessageCommand(),
+                new NoPermissionCommand(),
+                new CheckSubscriptionCommand(subscriptionDAO),
+                new SubscribeCommand(subscriptionDAO, coronaDataService),
+                new UnsubscribeCommand(coronaDataService, subscriptionDAO)
+        );
+        discordBot.awaitReady();
+        LOGGER.info("discord bot started");
+
+        return discordBot;
     }
 }
