@@ -35,8 +35,6 @@ public class Main {
                 new PingCommand(),
                 new StopCommand(),
                 new DirectMessageCommand(),
-                new SetupRolesCommand(coronaDataService),
-                new DeleteRolesCommand(coronaDataService),
                 new NoPermissionCommand(),
                 new CheckSubscriptionCommand(subscriptionDAO),
                 new SubscribeCommand(subscriptionDAO, coronaDataService),
