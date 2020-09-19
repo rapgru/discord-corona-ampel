@@ -39,4 +39,10 @@ public abstract class Command {
             msg.delete().queueAfter(REMOVAL_TIME, TimeUnit.SECONDS);
         });
     }
+
+    protected static void sendTimedMessageFormat(MessageChannel channel, String format, Object... args) {
+        channel.sendMessageFormat(format, args).queue(msg -> {
+            msg.delete().queueAfter(REMOVAL_TIME, TimeUnit.SECONDS);
+        });
+    }
 }

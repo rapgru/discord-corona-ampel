@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 public class SubscribeCommand extends Command {
 
@@ -38,19 +39,14 @@ public class SubscribeCommand extends Command {
             return;
         }
 
-        if (message.getMember() == null) {
-            LOGGER.warn("member of message is null");
-            return;
-        }
-
         String districtName = String.join(" ", args);
-        String userId = message.getMember().getUser().getId();
+        String userId = Objects.requireNonNull(message.getMember()).getUser().getId();
         List<Subscription> subscriptions = subscriptionDAO.getSubscriptionWithUsername(userId);
 
         // get District from database
         District district = coronaDataService.getDistrictByName(districtName, true).orElse(null);
         if (district == null) {
-            sendTimedMessage(channel, "Gemeinde '" + districtName + "' konnte nicht gefunden werden.");
+            sendTimedMessageFormat(channel, "Gemeinde '%s' konnte nicht gefunden werden.", districtName);
             LOGGER.info("District {} not found.", districtName);
             return;
         }
@@ -62,7 +58,7 @@ public class SubscribeCommand extends Command {
         }
 
         // store subscription
-        sendTimedMessage(channel, "Für Gemeinde " + districtName + " mit GKZ " + district.getGkz() + " subscribed.");
+        sendTimedMessageFormat(channel, "Für Gemeinde %s mit GKZ %d subscribed.", districtName, district.getGkz());
         subscriptionDAO.storeSubscription(new Subscription(Instant.now(), userId, district.getGkz()));
         LOGGER.info("userId {} subscribed to district {}", userId, districtName);
     }

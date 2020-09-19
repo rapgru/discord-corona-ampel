@@ -3,11 +3,12 @@ package com.rapgru.ampel.discord.commands;
 import com.rapgru.ampel.dao.SubscriptionDAO;
 import com.rapgru.ampel.discord.Command;
 import com.rapgru.ampel.model.Subscription;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class CheckSubscriptionCommand extends Command {
 
@@ -24,34 +25,22 @@ public class CheckSubscriptionCommand extends Command {
 
     @Override
     public void execute(Message message, String[] args) {
-        MessageChannel channel = message.getChannel();
-        Member member = message.getMember();
-        if (member == null) {
-            sendTimedMessage(channel, "can not find member.");
-            return;
-        }
-
-        if (member.getUser().isBot()) {
-            sendTimedMessage(channel, "this command is only for humans.");
-            return;
-        }
-
-        String userId = member.getUser().getId();
-        List<Subscription> subscriptions = subscriptionDAO.getSubscriptionWithUsername(userId);
+        User user = Objects.requireNonNull(message.getMember()).getUser();
+        List<Integer> subscriptions = subscriptionDAO.getSubscriptionWithUsername(user.getId())
+                .stream()
+                .map(Subscription::getGkz)
+                .collect(Collectors.toList());
 
         if (subscriptions.isEmpty()) {
-            sendTimedMessage(channel, member.getUser().getName() + " hat keine subscriptions.");
+            sendTimedMessageFormat(message.getChannel(), "%s hat keine subscriptions.", user.getName());
             return;
         }
 
-        // send subscriptions to user
-        StringBuilder subscriptionListBuilder = new StringBuilder(
-                member.getUser().getName() + " hat folgende Gemeinden subscribed: "
+        sendTimedMessageFormat(
+                message.getChannel(),
+                "%s hat folgende GKZs subscribed: %s",
+                user.getName(),
+                subscriptions.toString()
         );
-        subscriptions.forEach(subscription -> {
-            subscriptionListBuilder.append(subscription.getGkz()); //TODO: name of district instead of Gkz
-            subscriptionListBuilder.append(" ");
-        });
-        sendTimedMessage(channel, subscriptionListBuilder.toString());
     }
 }
