@@ -51,14 +51,15 @@ public class CommandExecutor extends ListenerAdapter {
             return;
         }
 
-        message.addReaction("U+2611").queue(aVoid ->
-                message.delete().queueAfter(Command.REMOVAL_TIME, TimeUnit.SECONDS));
-
         // delegate execution to corresponding command class
         commands.stream()
                 .filter(command -> rawMessage.toLowerCase().startsWith(command.getName().toLowerCase(), 1))
                 .findFirst()
                 .ifPresent(command -> {
+                    // add tick reaction
+                    message.addReaction("U+2611").queue(aVoid ->
+                            message.delete().queueAfter(Command.REMOVAL_TIME, TimeUnit.SECONDS));
+
                     // no permissions
                     if (!command.getRoles().stream().allMatch(role -> hasRole(event.getMember(), role))) {
                         command.roleNotFound(message);
