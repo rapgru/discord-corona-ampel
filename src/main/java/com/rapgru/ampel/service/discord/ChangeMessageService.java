@@ -10,5 +10,5 @@ public interface ChangeMessageService {
 
     MessageEmbed buildPrivateMessage(DistrictChange districtChange);
 
-    MessageEmbed buildBroadcastMessage(List<DistrictChange> changes);
+    List<MessageEmbed> buildBroadcastMessage(List<DistrictChange> changes);
 }

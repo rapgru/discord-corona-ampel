@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChangeMessageServiceImpl implements ChangeMessageService {
 
@@ -21,23 +22,8 @@ public class ChangeMessageServiceImpl implements ChangeMessageService {
     }
 
     @Override
-    public MessageEmbed buildBroadcastMessage(List<DistrictChange> changes) {
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-
-        if(changes.size() == 1) {
-            embedBuilder.setTitle("Ampelschaltungen f\u00fcr 1 Gemeinde");
-        } else {
-            embedBuilder.setTitle(String.format("Ampelschaltungen f\u00fcr %d Gemeinden", changes.size()));
-        }
-
-        embedBuilder.setColor(Color.pink);
-
-        embedBuilder.setDescription(String.format("Es gab Ampelschaltungen f\u00fcr %d \u00f6sterreichische Gemeinden." +
-                " Siehe dir die \u00dcberg\u00e4nge unterbei an", changes.size()));
-
-        changes.forEach(districtChange -> addTransitionField(embedBuilder, districtChange));
-
-        return embedBuilder.build();
+    public List<MessageEmbed> buildBroadcastMessage(List<DistrictChange> changes) {
+        return changes.stream().map(this::buildPrivateMessage).collect(Collectors.toList());
     }
 
     private void addTransitionField(EmbedBuilder embedBuilder, DistrictChange change) {

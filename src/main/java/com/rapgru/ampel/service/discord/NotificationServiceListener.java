@@ -41,8 +41,9 @@ public class NotificationServiceListener implements NotificationService {
         });
         LOGGER.info("sent direct message change notifications");
 
-        MessageEmbed broadcastMessage = changeMessageService.buildBroadcastMessage(changes);
-        discordBot.broadcastToNotificationChannels(broadcastMessage);
+        List<MessageEmbed> broadcastMessage = changeMessageService.buildBroadcastMessage(changes);
+        broadcastMessage.forEach(discordBot::broadcastToNotificationChannels);
+        LOGGER.info("sent broadcast messages");
         //discordBot.broadcastToNotificationChannels(subscribers.size() + " direct messages sent!"); // debug
     }
 }
