@@ -19,7 +19,11 @@
         },
         {
           "name": "#github",
-          "value": "Im dem Channel <#756182996494712842> werden alle Änderungen an unserem GitHub-Repository <https://github.com/rapgru/discord-corona-ampel> angezeigt."
+          "value": "In dem Channel <#756182996494712842> werden alle Änderungen an unserem GitHub-Repository <https://github.com/rapgru/discord-corona-ampel> angezeigt."
+        },
+        {
+          "name": "#chat",
+          "value": "Der Channel <#756589498523058207> ist ein allgemeiner Chat-Kanal für Gespräche, Nachrichten and die Administratoren, etc."
         }
       ]
     },
