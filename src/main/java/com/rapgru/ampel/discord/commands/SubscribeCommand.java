@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 public class SubscribeCommand extends Command {
 
@@ -34,34 +35,30 @@ public class SubscribeCommand extends Command {
     public void execute(Message message, String[] args) {
         MessageChannel channel = message.getChannel();
         if (args.length == 0) {
-            sendMessage(channel, "Falsche Verwendung, bitte versuche es nochmal. \n```!subscribe <Gemeinde>```");
-            return;
-        }
-
-        if (message.getMember() == null) {
+            sendTimedMessage(channel, "Falsche Verwendung, bitte versuche es nochmal. \n```!subscribe <Gemeinde>```");
             return;
         }
 
         String districtName = String.join(" ", args);
-        String userId = message.getMember().getUser().getId();
+        String userId = Objects.requireNonNull(message.getMember()).getUser().getId();
         List<Subscription> subscriptions = subscriptionDAO.getSubscriptionWithUsername(userId);
 
         // get District from database
         District district = coronaDataService.getDistrictByName(districtName, true).orElse(null);
         if (district == null) {
-            sendMessage(channel, "Gemeinde '" + districtName + "' konnte nicht gefunden werden.");
+            sendTimedMessageFormat(channel, "Gemeinde '%s' konnte nicht gefunden werden.", districtName);
+            LOGGER.info("District {} not found.", districtName);
             return;
         }
 
         // check if already subscribed
         if (subscriptions.stream().anyMatch(sub -> sub.getGkz() == district.getGkz())) {
-            sendMessage(channel, "Du bist bereits zu dieser Gemeinde subscribed.");
-            LOGGER.info("District {} not found.", districtName);
+            sendTimedMessage(channel, "Du bist bereits zu dieser Gemeinde subscribed.");
             return;
         }
 
         // store subscription
-        sendMessage(channel, "Für Gemeinde " + districtName + " mit GKZ " + district.getGkz() + " subscribed.");
+        sendTimedMessageFormat(channel, "Für Gemeinde %s mit GKZ %d subscribed.", districtName, district.getGkz());
         subscriptionDAO.storeSubscription(new Subscription(Instant.now(), userId, district.getGkz()));
         LOGGER.info("userId {} subscribed to district {}", userId, districtName);
     }

@@ -10,6 +10,6 @@ public abstract class AdminCommand extends Command {
 
     @Override
     public void roleNotFound(Message message) {
-        message.getChannel().sendMessage("This command is only for admins.").queue();
+        sendTimedMessage(message.getChannel(), "This command is only for admins.");
     }
 }

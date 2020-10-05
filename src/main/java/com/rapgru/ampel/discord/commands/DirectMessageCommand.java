@@ -1,8 +1,10 @@
 package com.rapgru.ampel.discord.commands;
 
 import com.rapgru.ampel.discord.AdminCommand;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
+
+import java.util.Objects;
 
 public class DirectMessageCommand extends AdminCommand {
 
@@ -15,21 +17,11 @@ public class DirectMessageCommand extends AdminCommand {
 
     @Override
     public void execute(Message message, String[] args) {
-        Member member = message.getMember();
-        if (member == null) {
-            return;
-        }
+        User user = Objects.requireNonNull(message.getMember()).getUser();
 
         message.addReaction("U+2611").queue(); // unicode for check box icon
 
-        member.getUser().openPrivateChannel().queue(privateChannel -> {
-            StringBuilder directMessageBuilder = new StringBuilder();
-            for (int i = 0; i < args.length; i++) {
-                directMessageBuilder.append(args[i]);
-                directMessageBuilder.append(" ");
-            }
-
-            privateChannel.sendMessage(directMessageBuilder.toString()).queue();
-        });
+        user.openPrivateChannel().queue(privateChannel ->
+                privateChannel.sendMessage(String.join(" ", args)).queue());
     }
 }

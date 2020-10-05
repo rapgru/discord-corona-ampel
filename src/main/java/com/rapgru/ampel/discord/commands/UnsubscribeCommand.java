@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 
 public class UnsubscribeCommand extends Command {
 
@@ -33,33 +34,29 @@ public class UnsubscribeCommand extends Command {
     public void execute(Message message, String[] args) {
         MessageChannel channel = message.getChannel();
         if (args.length == 0) {
-            sendMessage(channel, "Falsche Verwendung, bitte versuche es nochmal. \n```!unsubscribe <Gemeinde>```");
+            sendTimedMessage(channel, "Falsche Verwendung, bitte versuche es nochmal. \n```!unsubscribe <Gemeinde>```");
             return;
         }
 
         String districtName = String.join(" ", args);
         District district = coronaDataService.getDistrictByName(districtName, true).orElse(null);
         if (district == null) {
-            sendMessage(channel, "Gemeinde '" + districtName + "' konnte nicht gefunden werden");
+            sendTimedMessageFormat(channel, "Gemeinde '%s' konnte nicht gefunden werden", districtName);
             LOGGER.info("District {} can not be found.", districtName);
             return;
         }
 
-        if (message.getMember() == null) {
-            return;
-        }
-        String userId = message.getMember().getUser().getId();
+        String userId = Objects.requireNonNull(message.getMember()).getUser().getId();
         List<Subscription> subscriptions = subscriptionDAO.getSubscriptionWithUsername(userId);
-
         if (subscriptions.isEmpty()) {
-            sendMessage(channel, "Du bist nicht bei der Gemeinde " + districtName + " subscribed");
+            sendTimedMessageFormat(channel, "Du bist nicht bei der Gemeinde '%s' subscribed", districtName);
             return;
         }
         subscriptions.stream()
                 .filter(subscription -> subscription.getGkz() == district.getGkz())
                 .forEach(subscription -> {
                     subscriptionDAO.deleteSubscription(subscription);
-                    sendMessage(channel, "Unsubscribed von Gemeinde " + districtName);
+                    sendTimedMessageFormat(channel, "Unsubscribed von Gemeinde '%s'", districtName);
                     LOGGER.info("userId {} unsubscribed from district {}", userId, districtName);
                 });
     }
