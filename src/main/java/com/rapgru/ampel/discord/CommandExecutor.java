@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 public class CommandExecutor extends ListenerAdapter {
 
@@ -36,7 +37,7 @@ public class CommandExecutor extends ListenerAdapter {
         if (!validateUserMessage(event, message)) {
             return;
         }
-        String rawMessage = message.getContentRaw();
+        final String rawMessage = message.getContentRaw();
         TextChannel channel = event.getTextChannel();
 
         // check for allowed channels
@@ -53,7 +54,7 @@ public class CommandExecutor extends ListenerAdapter {
 
         // delegate execution to corresponding command class
         commands.stream()
-                .filter(command -> rawMessage.toLowerCase().startsWith(command.getName().toLowerCase(), 1))
+                .filter(filterValidCommand(rawMessage))
                 .findFirst()
                 .ifPresent(command -> {
                     // add tick reaction
@@ -68,9 +69,26 @@ public class CommandExecutor extends ListenerAdapter {
 
                     // execute command
                     String[] args = rawMessage.split(" ");
-                    command.execute(message, Arrays.copyOfRange(args, 1, args.length));
+
+                    command.execute(message, Arrays.copyOfRange(args, command.hasWhitespace() ? 2 : 1, args.length));
+
                     LOGGER.info("User {} executed command {}", command.getName(), event.getMember().getUser().getName());
                 });
+    }
+
+    private Predicate<Command> filterValidCommand(String rawMessage) {
+        return command -> {
+            var messageLowerCase = rawMessage.toLowerCase();
+            var commandLowerCase = command.getName().toLowerCase();
+
+            // also allow whitespace before command: ! subscribe
+            if (messageLowerCase.startsWith(" " + commandLowerCase,1)) {
+                command.setHasWhitespace(true);
+                return true;
+            }
+
+            return messageLowerCase.startsWith(commandLowerCase,1);
+        };
     }
 
     private void deleteNonCommandMessages(MessageReceivedEvent event, String rawMessage) {

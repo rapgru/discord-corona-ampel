@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -14,13 +13,15 @@ public abstract class Command {
 
     private final List<String> roles = new ArrayList<>();
 
+    private boolean hasWhitespace = false;
+
     public abstract void execute(Message message, String[] args);
+
+    public abstract String getName();
 
     public void roleNotFound(Message message) {
         sendTimedMessage(message.getChannel(), "You dont have permissions for this command.");
     }
-
-    public abstract String getName();
 
     public List<String> getRoles() {
         return roles;
@@ -30,8 +31,12 @@ public abstract class Command {
         roles.add(roleName);
     }
 
-    public void addRoles(String... roleNames) {
-        roles.addAll(Arrays.asList(roleNames));
+    public boolean hasWhitespace() {
+        return hasWhitespace;
+    }
+
+    public void setHasWhitespace(boolean hasWhitespace) {
+        this.hasWhitespace = hasWhitespace;
     }
 
     protected static void sendTimedMessage(MessageChannel channel, String message) {

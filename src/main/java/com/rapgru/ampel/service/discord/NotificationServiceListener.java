@@ -3,7 +3,6 @@ package com.rapgru.ampel.service.discord;
 import com.rapgru.ampel.dao.SubscriptionDAO;
 import com.rapgru.ampel.discord.DiscordBot;
 import com.rapgru.ampel.model.DistrictChange;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +29,8 @@ public class NotificationServiceListener implements NotificationService {
             MessageEmbed notification = changeMessageService.buildPrivateMessage(districtChange);
 
             // user direct message
-            List<String> subscribers = subscriptionDAO.getUsernamesSubscribedTo(
-                    districtChange.getDataPoint().getDistrict().getGkz()
-            );
-            subscribers.forEach(
-                    userId -> discordBot.sendDirectMessage(userId, notification)
+            subscriptionDAO.getUsernamesSubscribedTo(districtChange.getDataPoint().getDistrict().getGkz())
+                    .forEach(userId -> discordBot.sendDirectMessage(userId, notification)
             );
 
             // channel message
